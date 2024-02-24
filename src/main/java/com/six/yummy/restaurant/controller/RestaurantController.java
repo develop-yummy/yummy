@@ -25,6 +25,6 @@ public class RestaurantController {
     ){
         RestaurantResponse restaurantResponse = restaurantService.saveRestaurant(restaurantRequest);
 
-        return new ResponseEntity<>(restaurantResponse, HttpStatus.OK);
+        return new ResponseEntity<>(restaurantResponse, HttpStatus.CREATED);
     }
 }
