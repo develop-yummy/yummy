@@ -1,5 +1,6 @@
 package com.six.yummy.user.requestdto;
 
+import com.six.yummy.global.address.Address;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -25,5 +26,7 @@ public class SignupRequest {
     private boolean admin = false;
 
     private String adminToken = "";
+
+    private Address address;
 
 }
