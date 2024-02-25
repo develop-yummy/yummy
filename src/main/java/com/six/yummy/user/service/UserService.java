@@ -1,5 +1,6 @@
 package com.six.yummy.user.service;
 
+import com.six.yummy.global.address.Address;
 import com.six.yummy.global.util.PasswordEncoderUtil;
 import com.six.yummy.user.entity.User;
 import com.six.yummy.user.entity.UserRoleEnum;
@@ -7,6 +8,7 @@ import com.six.yummy.user.jwt.JwtUtil;
 import com.six.yummy.user.repository.UserRepository;
 import com.six.yummy.user.requestdto.LoginRequest;
 import com.six.yummy.user.requestdto.SignupRequest;
+import com.six.yummy.user.responsedto.LoginResponse;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -27,7 +29,7 @@ public class UserService {
         String username = request.getUsername();
         String password = passwordEncoderUtil.passwordEncoder().encode(request.getPassword());
 
-        // 회원 중복 확인
+        // 회원 중복확인
         if (userRepository.findByUsername(username).isPresent()) {
             throw new IllegalArgumentException("이미 존재하는 유저 입니다.");
         }
@@ -59,14 +61,14 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public void login(LoginRequest request) {
-        String username = request.getUsername();
+    public LoginResponse login(LoginRequest request) {
+        String email = request.getEmail();
         String password = request.getPassword();
 
-        // 유저 존재여부 확인
-        Optional<User> user = userRepository.findByUsername(username); // todo : User user로 접근하는게 좋은지 - 왜냐면 user.get().getPassword() 이렇게 가져와서..
+        // 이메일 존재 확인
+        Optional<User> user = userRepository.findByEmail(email); // todo : User user로 접근하는게 좋은지 - 왜냐면 user.get().getPassword() 이렇게 가져와서..
         if (user.isEmpty()) {
-            throw new IllegalArgumentException("존재하지 않는 유저입니다.");
+            throw new IllegalArgumentException("존재하지 않는 유저 이메일입니다.");
         }
 
         // 패스워드 일치 확인
@@ -74,6 +76,16 @@ public class UserService {
             throw new IllegalArgumentException("비밀번호가 다릅니다.");
         }
 
-        jwtUtil.createToken(user.get().getUsername(), user.get().getRole());
+        String token = jwtUtil.createToken(user.get().getUsername(), user.get().getRole());
+
+        LoginResponse response = LoginResponse.builder()
+            .username(user.get().getUsername())
+            .password(user.get().getPassword())
+            .email(user.get().getEmail())
+            .phoneNumber(user.get().getPhoneNumber())
+            .token(token)
+            .build();
+
+        return response;
     }
 }

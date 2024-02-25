@@ -2,6 +2,7 @@ package com.six.yummy.user.controller;
 
 import com.six.yummy.user.requestdto.LoginRequest;
 import com.six.yummy.user.requestdto.SignupRequest;
+import com.six.yummy.user.responsedto.LoginResponse;
 import com.six.yummy.user.service.UserService;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -32,9 +33,9 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody LoginRequest request) {
-        userService.login(request);
-        return "로그인 성공";
+    public LoginResponse login(@RequestBody LoginRequest request) {
+        LoginResponse response = userService.login(request);
+        return response;
     }
 
 }
