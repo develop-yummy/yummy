@@ -16,8 +16,6 @@ public class RestaurantService {
 
     public RestaurantResponse saveRestaurant(RestaurantRequest restaurantRequest, User user) {
 
-
-
         Restaurant restaurant = restaurantRepository.save(Restaurant.createRestaurant(
             restaurantRequest.getRestaurantName(),
             restaurantRequest.getAddress(),
