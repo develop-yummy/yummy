@@ -8,7 +8,7 @@ import lombok.Getter;
 public class LoginRequest { // JwtAuthenticationFilter 사용
 
     @NotBlank
-    private String username;
+    private String email;
 
     @NotBlank
     @Pattern(regexp = "^[a-zA-Z0-9]{8,15}$")
