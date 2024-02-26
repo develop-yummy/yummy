@@ -3,11 +3,13 @@ package com.six.yummy.menu.service;
 import com.six.yummy.menu.entity.Menu;
 import com.six.yummy.menu.repository.MenuRepository;
 import com.six.yummy.menu.requestdto.MenuRequest;
+import com.six.yummy.menu.responsedto.MenuListResponse;
 import com.six.yummy.menu.responsedto.MenuResponse;
 import com.six.yummy.restaurant.entity.Restaurant;
 import com.six.yummy.restaurant.repository.RestaurantRepository;
 import com.six.yummy.user.entity.User;
 import com.six.yummy.user.repository.UserRepository;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -41,6 +43,16 @@ public class MenuService {
             .menuName(menu.getMenuName())
             .category(menu.getCategory())
             .build();
+    }
+
+    public List<MenuListResponse> getMenus(Long restaurantId) {
+        Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow(
+            () -> new IllegalArgumentException("등록된 가게가 존재하지 않습니다.")
+        );
+
+        return menuRepository.findByRestaurant(restaurant).stream().map(
+            (Menu menu) -> new MenuListResponse(menu.getMenuName(), menu.getMenuPrice()))
+            .toList();
     }
 
     public MenuResponse updateMenu(Long menuId, MenuRequest menuRequest, Long restaurantId, Long userId) {
@@ -88,4 +100,5 @@ public class MenuService {
             () -> new IllegalArgumentException("메뉴가 존재하지 않습니다.")
         );
     }
+
 }
