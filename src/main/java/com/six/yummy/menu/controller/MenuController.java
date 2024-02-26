@@ -8,7 +8,6 @@ import com.six.yummy.user.lmpl.UserDetailsImpl;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -33,16 +32,29 @@ public class MenuController {
         @PathVariable Long restaurant_id,
         @Valid @RequestBody MenuRequest menuRequest,
         @AuthenticationPrincipal UserDetailsImpl userDetails
-    ){
-        MenuResponse menuResponse = menuService.saveMenu(menuRequest, restaurant_id, userDetails.getUser().getId());
+    ) {
+        MenuResponse menuResponse = menuService.saveMenu(menuRequest, restaurant_id,
+            userDetails.getUser().getId());
 
         return new ResponseEntity<>(menuResponse, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/{restaurant_id}/{menu_id}")
+    public ResponseEntity<MenuResponse> getMenu(
+        @PathVariable Long restaurant_id,
+        @PathVariable Long menu_id,
+        @AuthenticationPrincipal UserDetailsImpl userDetails
+    ) {
+        MenuResponse menuResponse = menuService.getMenu(restaurant_id, menu_id,
+            userDetails.getUser().getId());
+
+        return new ResponseEntity<>(menuResponse, HttpStatus.OK);
     }
 
     @GetMapping("/{restaurant_id}")
     public ResponseEntity<List<MenuListResponse>> getMenus(
         @PathVariable Long restaurant_id
-    ){
+    ) {
         List<MenuListResponse> menusResponse = menuService.getMenus(restaurant_id);
 
         return new ResponseEntity<>(menusResponse, HttpStatus.OK);
@@ -54,7 +66,7 @@ public class MenuController {
         @PathVariable Long restaurant_id,
         @Valid @RequestBody MenuRequest menuRequest,
         @AuthenticationPrincipal UserDetailsImpl userDetails
-    ){
+    ) {
         MenuResponse menuResponse = menuService.updateMenu(menu_id, menuRequest, restaurant_id,
             userDetails.getUser().getId());
 
@@ -66,7 +78,7 @@ public class MenuController {
         @PathVariable Long menu_id,
         @PathVariable Long restaurant_id,
         @AuthenticationPrincipal UserDetailsImpl userDetails
-    ){
+    ) {
         menuService.deleteMenu(menu_id, restaurant_id, userDetails.getUser().getId());
 
         return new ResponseEntity<>(HttpStatus.OK);
