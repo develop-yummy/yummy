@@ -10,14 +10,14 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class ReviewResponse {
 
-    private Long id;
+    private Long reviewId;
     private String username;
     private Short point;
     private String content;
     private LocalDateTime createdAt;
 
     public ReviewResponse (Review review){
-        this.id = review.getId();
+        this.reviewId = review.getReviewId();
         this.username = review.getUsername();
         this.point = review.getPoint();
         this.content = review.getContent();

@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor
-@Table (name = "like")
+@Table(name = "like")
 public class Like {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,7 +24,7 @@ public class Like {
     @JoinColumn(name = "review_id", nullable = false)
     private Review review;
 
-    public Like (User user, Review review){
+    public Like(User user, Review review) {
         this.user = user;
         this.review = review;
     }
@@ -34,7 +34,7 @@ public class Like {
         review.getLikeList().add(this);
     }
 
-    public void removeReview(Review review){
+    public void removeReview(Review review) {
         this.review = review;
         review.getLikeList().remove(this);
     }
