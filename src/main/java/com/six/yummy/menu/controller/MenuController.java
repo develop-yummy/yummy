@@ -6,10 +6,13 @@ import com.six.yummy.menu.service.MenuService;
 import com.six.yummy.user.lmpl.UserDetailsImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,14 +26,38 @@ public class MenuController {
 
     private final MenuService menuService;
 
-    @PostMapping("/{restaurantId}")
+    @PostMapping("/{restaurant_id}")
     public ResponseEntity<MenuResponse> saveMenu(
-        @PathVariable Long restaurantId,
+        @PathVariable Long restaurant_id,
         @Valid @RequestBody MenuRequest menuRequest,
         @AuthenticationPrincipal UserDetailsImpl userDetails
     ){
-        MenuResponse menuResponse = menuService.saveMenu(menuRequest, restaurantId, userDetails.getUser());
+        MenuResponse menuResponse = menuService.saveMenu(menuRequest, restaurant_id, userDetails.getUser().getId());
 
         return new ResponseEntity<>(menuResponse, HttpStatus.CREATED);
+    }
+
+    @PatchMapping("/{restaurant_id}/{menu_id}/update")
+    public ResponseEntity<MenuResponse> updateMenu(
+        @PathVariable Long menu_id,
+        @PathVariable Long restaurant_id,
+        @Valid @RequestBody MenuRequest menuRequest,
+        @AuthenticationPrincipal UserDetailsImpl userDetails
+    ){
+        MenuResponse menuResponse = menuService.updateMenu(menu_id, menuRequest, restaurant_id,
+            userDetails.getUser().getId());
+
+        return new ResponseEntity<>(menuResponse, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{restaurant_id}/{menu_id}/delete")
+    public ResponseEntity<Void> deleteMenu(
+        @PathVariable Long menu_id,
+        @PathVariable Long restaurant_id,
+        @AuthenticationPrincipal UserDetailsImpl userDetails
+    ){
+        menuService.deleteMenu(menu_id, restaurant_id, userDetails.getUser().getId());
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

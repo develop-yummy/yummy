@@ -51,4 +51,11 @@ public class Menu {
     public static Menu createMenu(String menuName, long menuPrice, String menuContents, String category, Restaurant restaurant){
         return new Menu(menuName, menuPrice, menuContents, category, restaurant);
     }
+
+    public void update(String menuName, long menuPrice, String menuContents, String category){
+        this.menuName = menuName;
+        this.menuPrice = menuPrice;
+        this.menuContents = menuContents;
+        this.category = category;
+    }
 }
