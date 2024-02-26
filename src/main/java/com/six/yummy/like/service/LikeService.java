@@ -22,24 +22,30 @@ public class LikeService {
     private final ReviewRepository reviewRepository;
 
     @Transactional
-    public LikeResponse createLike(LikeRequest likeRequest, User user) {
-        Review review = reviewRepository.findById(likeRequest.getReveiwId()).orElseThrow(() -> new IllegalArgumentException("리뷰를 찾을 수 없습니다."));
+    public LikeResponse createLike(Long reveiwId, User user) {
+        Review review = reviewRepository.findById(reveiwId).orElseThrow(() -> new IllegalArgumentException("리뷰를 찾을 수 없습니다."));
 
         if (!likeRepository.findByUserAndReview(user, review).isPresent()) {
             Like like = new Like(user, review);
+            like.setReview(review); // 해당 리뷰에 좋아요 추가(리스트 형태)
+            reviewRepository.save(review);
             likeRepository.save(like);
 
             return new LikeResponse(like, "좋아요 하셨습니다");
         } else {
-            throw new IllegalArgumentException("이미 좋아요 하신 리뷰입니다"); }
+            throw new IllegalArgumentException("이미 좋아요 하신 리뷰입니다");
+        }
     }
 
-        public void deleteLike(Long likeId, User user) {
-        Like like = likeRepository.findById(likeId).orElseThrow(()->new IllegalArgumentException("좋아요가 없습니다"));
-
-        if(!user.getId().equals(like.getUser().getId())) {
-                throw new RejectedExecutionException("좋아요 하신 적이 없는 리뷰입니다");}
-
-            likeRepository.delete(like);
+    @Transactional
+    public void deleteLike(Long likeId, User user) {
+        Like like = likeRepository.findById(likeId).orElseThrow(() -> new IllegalArgumentException("좋아요가 없습니다"));
+        Review review = like.getReview();
+        if (!user.getId().equals(like.getUser().getId())) {
+            throw new RejectedExecutionException("좋아요 하신 적이 없는 리뷰입니다");
+        }
+        like.removeReview(review);//리뷰의 좋아요 리스트에서 제거.
+        reviewRepository.save(review);
+        likeRepository.delete(like);
     }
 }

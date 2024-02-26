@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 public class Like {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long Id;
+    private Long likeId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
@@ -27,5 +27,15 @@ public class Like {
     public Like (User user, Review review){
         this.user = user;
         this.review = review;
+    }
+
+    public void setReview(Review review) {
+        this.review = review;
+        review.getLikeList().add(this);
+    }
+
+    public void removeReview(Review review){
+        this.review = review;
+        review.getLikeList().remove(this);
     }
 }
