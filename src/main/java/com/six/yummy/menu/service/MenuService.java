@@ -58,6 +58,13 @@ public class MenuService {
             .toList();
     }
 
+    public MenuResponse getMenu(Long restaurantId, Long menuId, Long userId) {
+        validationUser(userId);
+        validationRestaurant(restaurantId);
+        Menu menu = findMenuById(menuId);
+        return new MenuResponse(menu.getMenuId(), menu.getMenuName(), menu.getMenuPrice(), menu.getMenuContents(), menu.getCategory());
+    }
+
     @Transactional
     public MenuResponse updateMenu(Long menuId, MenuRequest menuRequest, Long restaurantId, Long userId) {
 

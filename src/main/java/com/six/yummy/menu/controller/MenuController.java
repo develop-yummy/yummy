@@ -4,6 +4,7 @@ import com.six.yummy.menu.requestdto.MenuRequest;
 import com.six.yummy.menu.responsedto.MenuListResponse;
 import com.six.yummy.menu.responsedto.MenuResponse;
 import com.six.yummy.menu.service.MenuService;
+import com.six.yummy.user.entity.User;
 import com.six.yummy.user.lmpl.UserDetailsImpl;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -37,6 +38,18 @@ public class MenuController {
         MenuResponse menuResponse = menuService.saveMenu(menuRequest, restaurant_id, userDetails.getUser().getId());
 
         return new ResponseEntity<>(menuResponse, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/{restaurant_id}/{menu_id}")
+    public ResponseEntity<MenuResponse> getMenu(
+        @PathVariable Long restaurant_id,
+        @PathVariable Long menu_id,
+        @AuthenticationPrincipal UserDetailsImpl userDetails
+    ){
+        MenuResponse menuResponse = menuService.getMenu(restaurant_id, menu_id,
+            userDetails.getUser().getId());
+
+        return new ResponseEntity<>(menuResponse, HttpStatus.OK);
     }
 
     @GetMapping("/{restaurant_id}")
