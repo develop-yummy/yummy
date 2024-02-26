@@ -31,6 +31,9 @@ public class CartItem {
     @Column(nullable = false)
     private Boolean state;
 
+    @Column
+    private Long orderId;
+
     @ManyToOne
     @JoinColumn(name = "userId")
     private User user;
@@ -55,5 +58,7 @@ public class CartItem {
         this.totalPrice = (int) (this.getMenu().getMenuPrice() * this.getCount());
     }
 
-
+    public void inputOrderId(Long orderId) {
+        this.orderId = orderId;
+    }
 }
