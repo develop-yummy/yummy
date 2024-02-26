@@ -1,10 +1,12 @@
 package com.six.yummy.menu.controller;
 
 import com.six.yummy.menu.requestdto.MenuRequest;
+import com.six.yummy.menu.responsedto.MenuListResponse;
 import com.six.yummy.menu.responsedto.MenuResponse;
 import com.six.yummy.menu.service.MenuService;
 import com.six.yummy.user.lmpl.UserDetailsImpl;
 import jakarta.validation.Valid;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
@@ -35,6 +37,15 @@ public class MenuController {
         MenuResponse menuResponse = menuService.saveMenu(menuRequest, restaurant_id, userDetails.getUser().getId());
 
         return new ResponseEntity<>(menuResponse, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/{restaurant_id}")
+    public ResponseEntity<List<MenuListResponse>> getMenus(
+        @PathVariable Long restaurant_id
+    ){
+        List<MenuListResponse> menusResponse = menuService.getMenus(restaurant_id);
+
+        return new ResponseEntity<>(menusResponse, HttpStatus.OK);
     }
 
     @PatchMapping("/{restaurant_id}/{menu_id}/update")
