@@ -17,6 +17,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class CartItem {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long cartItemId;
@@ -30,20 +31,29 @@ public class CartItem {
     @Column(nullable = false)
     private Boolean state;
 
-//    @ManyToOne
-//    @JoinColumn(name = "userId")
-//    private User user;
-//
-//    @ManyToOne
-//    @JoinColumn(name = "menuId")
-//    private Menu menu;
+    @ManyToOne
+    @JoinColumn(name = "userId")
+    private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "menuId")
+    private Menu menu;
 
     // 연관관계 이후 user와 menu 연결
     @Builder
-    public CartItem(int totalPrice, int count) {
+    public CartItem(int totalPrice, int count, User user, Menu menu) {
         // 외래키 생성 후 user, menu부분 채우기
         this.totalPrice = totalPrice;
         this.count = count;
         this.state = false;
+        this.user = user;
+        this.menu = menu;
     }
+
+    public void updateCartItemQuantityAndTotalPrice(int additionalCount) {
+        this.count = count + additionalCount;
+        this.totalPrice = (int) (this.getMenu().getMenuPrice() * this.getCount());
+    }
+
+
 }
