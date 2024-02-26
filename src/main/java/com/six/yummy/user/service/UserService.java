@@ -8,12 +8,15 @@ import com.six.yummy.user.jwt.JwtUtil;
 import com.six.yummy.user.repository.UserRepository;
 import com.six.yummy.user.requestdto.LoginRequest;
 import com.six.yummy.user.requestdto.SignupRequest;
+import com.six.yummy.user.requestdto.UpdateRequest;
 import com.six.yummy.user.responsedto.UserResponse;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.Optional;
+import java.util.concurrent.RejectedExecutionException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -66,7 +69,8 @@ public class UserService {
         String password = request.getPassword();
 
         // 이메일 존재 확인
-        Optional<User> user = userRepository.findByEmail(email); // todo : User user로 접근하는게 좋은지 - 왜냐면 user.get().getPassword() 이렇게 가져와서..
+        Optional<User> user = userRepository.findByEmail(
+            email); // todo : User user로 접근하는게 좋은지 - 왜냐면 user.get().getPassword() 이렇게 가져와서..
         if (user.isEmpty()) {
             throw new IllegalArgumentException("존재하지 않는 유저 이메일입니다.");
         }
@@ -76,18 +80,30 @@ public class UserService {
             throw new IllegalArgumentException("비밀번호가 다릅니다.");
         }
 
-        response.setHeader(jwtUtil.AUTHORIZATION_HEADER, jwtUtil.createToken(user.get().getUsername(), user.get().getRole()));
+        response.setHeader(jwtUtil.AUTHORIZATION_HEADER,
+            jwtUtil.createToken(user.get().getUsername(), user.get().getRole()));
     }
 
 
-    // 유저 단건 조회
+    // 회원정보 단건 조회
     public UserResponse getUser(Long id) {
         User user = findUser(id);
         return new UserResponse(user.getUsername(), user.getEmail(), user.getPhoneNumber());
 
     }
 
-    private User findUser(Long id) {
-        return userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("없는 회원입니다."));
+    // 회원정보 수정(비밀번호 제외)
+    @Transactional
+    public UserResponse updateUser(UpdateRequest request, Long id) {
+        User user = findUser(id);
+        user.updateUser(request.getUsername(), request.getEmail(), request.getPhoneNumber());
+        return new UserResponse(user.getUsername(), user.getEmail(), user.getPhoneNumber());
+
     }
+
+    private User findUser(Long id) {
+        return userRepository.findById(id)
+            .orElseThrow(() -> new IllegalArgumentException("없는 회원입니다."));
+    }
+
 }

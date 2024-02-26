@@ -101,4 +101,27 @@ public class CartItemService {
         return new ResponseEntity<>(new CartItemResponse("장바구니에 삭제할 내역이 없습니다."),
             HttpStatus.NOT_FOUND);
     }
+
+
+    public void inputOrderId(Long orderId, User user) {
+        List<CartItem> cartItems = cartItemRepository.findAllByUser_idAndOrderIdIsNull(
+            user.getId());
+        if (cartItems.isEmpty()) {
+            throw new NullPointerException("카트가 비어있습니다.");
+        }
+        for (CartItem cartItem : cartItems) {
+            cartItem.inputOrderId(orderId);
+        }
+    }
+
+    public List<CartItemListResponse> getOrderItems(Long orderId) {
+
+        return cartItemRepository.findAllByOrderId(orderId).stream().map(
+            (CartItem cartItem) -> new CartItemListResponse(
+                cartItem.getMenu().getMenuId(),
+                cartItem.getState(),
+                cartItem.getCount(),
+                cartItem.getTotalPrice()
+            )).toList();
+    }
 }

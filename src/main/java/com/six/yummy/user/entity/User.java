@@ -44,4 +44,10 @@ public class User {
         this.phoneNumber = phoneNumber;
         this.role = role;
     }
+
+    public void updateUser(String username, String email, String phoneNumber) {
+        this.username = username;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+    }
 }

@@ -79,7 +79,7 @@ public class RestaurantService {
         );
     }
 
-    private Restaurant findRestaurantById(Long restaurantId) {
+    public Restaurant findRestaurantById(Long restaurantId) {
         return restaurantRepository.findById(restaurantId).orElseThrow(
             () -> new IllegalArgumentException("등록된 식당이 존재하지 않습니다.")
         );
