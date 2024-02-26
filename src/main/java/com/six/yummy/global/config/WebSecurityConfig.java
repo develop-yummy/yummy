@@ -66,9 +66,7 @@ public class WebSecurityConfig {
             authorizeHttpRequests
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
                 .permitAll() // resources 접근 허용 설정
-                .requestMatchers("/v1/**").permitAll() // 메인페이지 요청 허가 todo : 팀원간 허가url 회의
-                .requestMatchers("/api/users/**").permitAll() // '/api/users/'로 시작하는 요청 모두 접근 허가
-                //.requestMatchers(HttpMethod.GET, "/api/schedules/**").permitAll() // GET방식, '/api/users/'로 시작하는 요청 모두 접근 허가 - 게시글 모두 조회할 때 사용
+                .requestMatchers("/v1/**").permitAll() // todo : 팀원간 허가url 회의
                 .anyRequest().permitAll() // 그 외 모든 요청 인증처리
         );
 

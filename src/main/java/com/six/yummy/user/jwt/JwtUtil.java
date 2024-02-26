@@ -71,7 +71,7 @@ public class JwtUtil {
 
     public Claims getUserInfoFromToken(String token) {
         return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token)
-            .getBody(); // Claim이라는 곳에 담아놓은 body가 꺼내짐
+            .getBody();
     }
 
     public String createToken(String username, UserRoleEnum role) {
