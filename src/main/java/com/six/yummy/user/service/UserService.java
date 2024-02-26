@@ -1,14 +1,15 @@
 package com.six.yummy.user.service;
 
-import com.six.yummy.global.address.Address;
 import com.six.yummy.global.util.PasswordEncoderUtil;
+import com.six.yummy.address.entity.Address;
 import com.six.yummy.user.entity.User;
 import com.six.yummy.user.entity.UserRoleEnum;
 import com.six.yummy.user.jwt.JwtUtil;
 import com.six.yummy.user.repository.UserRepository;
 import com.six.yummy.user.requestdto.LoginRequest;
 import com.six.yummy.user.requestdto.SignupRequest;
-import com.six.yummy.user.responsedto.LoginResponse;
+import com.six.yummy.user.responsedto.UserResponse;
+import jakarta.servlet.http.HttpServletResponse;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -56,12 +57,11 @@ public class UserService {
             }
             role = UserRoleEnum.ADMIN;
         }
-
         User user = new User(username, password, email, phoneNumber, role);
         userRepository.save(user);
     }
 
-    public LoginResponse login(LoginRequest request) {
+    public void login(LoginRequest request, HttpServletResponse response) {
         String email = request.getEmail();
         String password = request.getPassword();
 
@@ -76,16 +76,18 @@ public class UserService {
             throw new IllegalArgumentException("비밀번호가 다릅니다.");
         }
 
-        String token = jwtUtil.createToken(user.get().getUsername(), user.get().getRole());
+        response.setHeader(jwtUtil.AUTHORIZATION_HEADER, jwtUtil.createToken(user.get().getUsername(), user.get().getRole()));
+    }
 
-        LoginResponse response = LoginResponse.builder()
-            .username(user.get().getUsername())
-            .password(user.get().getPassword())
-            .email(user.get().getEmail())
-            .phoneNumber(user.get().getPhoneNumber())
-            .token(token)
-            .build();
 
-        return response;
+    // 유저 단건 조회
+    public UserResponse getUser(Long id) {
+        User user = findUser(id);
+        return new UserResponse(user.getUsername(), user.getEmail(), user.getPhoneNumber());
+
+    }
+
+    private User findUser(Long id) {
+        return userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("없는 회원입니다."));
     }
 }
