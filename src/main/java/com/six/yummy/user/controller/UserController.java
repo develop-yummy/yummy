@@ -1,14 +1,18 @@
 package com.six.yummy.user.controller;
 
+import com.six.yummy.user.lmpl.UserDetailsImpl;
 import com.six.yummy.user.requestdto.LoginRequest;
 import com.six.yummy.user.requestdto.SignupRequest;
-import com.six.yummy.user.responsedto.LoginResponse;
+import com.six.yummy.user.responsedto.UserResponse;
 import com.six.yummy.user.service.UserService;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,9 +37,21 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public LoginResponse login(@RequestBody LoginRequest request) {
-        LoginResponse response = userService.login(request);
+    public String login(@RequestBody LoginRequest request, HttpServletResponse response) {
+        userService.login(request, response);
+        return "로그인 성공";
+    }
+
+    // 회원정보 단건 조회
+    @GetMapping
+    public UserResponse getUser(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        UserResponse response = userService.getUser(userDetails.getUser().getId());
         return response;
     }
+
+    // 회원정보 수정(비밀번호 제외)
+
+    // 회원 비밀번호 수정
+    // 회원탈퇴
 
 }
