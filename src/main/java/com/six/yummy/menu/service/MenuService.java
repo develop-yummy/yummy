@@ -12,9 +12,11 @@ import com.six.yummy.user.repository.UserRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class MenuService {
 
     private final MenuRepository menuRepository;
@@ -45,6 +47,7 @@ public class MenuService {
             .build();
     }
 
+    @Transactional(readOnly = true)
     public List<MenuListResponse> getMenus(Long restaurantId) {
         Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow(
             () -> new IllegalArgumentException("등록된 가게가 존재하지 않습니다.")
@@ -55,6 +58,7 @@ public class MenuService {
             .toList();
     }
 
+    @Transactional
     public MenuResponse updateMenu(Long menuId, MenuRequest menuRequest, Long restaurantId, Long userId) {
 
         validationUser(userId);
