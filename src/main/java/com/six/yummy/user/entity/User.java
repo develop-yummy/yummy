@@ -45,9 +45,21 @@ public class User {
         this.role = role;
     }
 
+    // 업데이트하고 싶지 않은 값들이 들어왔을 때도 가능하게
     public void updateUser(String username, String email, String phoneNumber) {
-        this.username = username;
-        this.email = email;
-        this.phoneNumber = phoneNumber;
+        if (username != null) {
+            this.username = username;
+        }
+        if (email != null) {
+            this.email = email;
+        }
+        if (email != null) {
+            this.phoneNumber = phoneNumber;
+        }
+
+    }
+
+    public void updatePassword(String newPassword) {
+        this.password = newPassword;
     }
 }
