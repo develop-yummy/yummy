@@ -51,4 +51,11 @@ public class Restaurant {
 
         return new Restaurant(restaurantName, address, content, category, user);
     }
+
+    public void update(String restaurantName, String address, String content, String category){
+        this.restaurantName = restaurantName;
+        this.address = address;
+        this.content = content;
+        this.category = category;
+    }
 }
