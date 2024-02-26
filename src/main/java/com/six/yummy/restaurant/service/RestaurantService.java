@@ -42,16 +42,19 @@ public class RestaurantService {
     @Transactional(readOnly = true)
     public List<RestaurantListResponse> getRestaurants() {
         return restaurantRepository.findAll().stream().map(
-                (Restaurant restaurant) -> new RestaurantListResponse(restaurant.getRestaurantName(), restaurant.getContent()))
+                (Restaurant restaurant) -> new RestaurantListResponse(restaurant.getRestaurantName(),
+                    restaurant.getContent()))
             .toList();
     }
 
-    public RestaurantResponse updateRestaurant(RestaurantRequest restaurantRequest, Long userId, Long restaurantId) {
+    public RestaurantResponse updateRestaurant(RestaurantRequest restaurantRequest, Long userId,
+        Long restaurantId) {
         validationUser(userId);
 
         Restaurant restaurant = findRestaurantById(restaurantId);
 
-        restaurant.update(restaurantRequest.getRestaurantName(), restaurantRequest.getAddress(), restaurantRequest.getContent(), restaurantRequest.getCategory());
+        restaurant.update(restaurantRequest.getRestaurantName(), restaurantRequest.getAddress(),
+            restaurantRequest.getContent(), restaurantRequest.getCategory());
 
         return RestaurantResponse.builder()
             .restaurantId(restaurant.getRestaurantId())
@@ -70,7 +73,7 @@ public class RestaurantService {
         restaurantRepository.delete(restaurant);
     }
 
-    private void validationUser(Long userId){
+    private void validationUser(Long userId) {
         userRepository.findById(userId).orElseThrow(
             () -> new IllegalArgumentException("등록된 유저가 존재하지 않습니다.")
         );
@@ -79,7 +82,7 @@ public class RestaurantService {
     private Restaurant findRestaurantById(Long restaurantId) {
         return restaurantRepository.findById(restaurantId).orElseThrow(
             () -> new IllegalArgumentException("등록된 식당이 존재하지 않습니다.")
-            );
+        );
     }
 
 }

@@ -7,7 +7,6 @@ import com.six.yummy.menu.responsedto.MenuListResponse;
 import com.six.yummy.menu.responsedto.MenuResponse;
 import com.six.yummy.restaurant.entity.Restaurant;
 import com.six.yummy.restaurant.repository.RestaurantRepository;
-import com.six.yummy.user.entity.User;
 import com.six.yummy.user.repository.UserRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -54,7 +53,7 @@ public class MenuService {
         );
 
         return menuRepository.findByRestaurant(restaurant).stream().map(
-            (Menu menu) -> new MenuListResponse(menu.getMenuName(), menu.getMenuPrice()))
+                (Menu menu) -> new MenuListResponse(menu.getMenuName(), menu.getMenuPrice()))
             .toList();
     }
 
@@ -62,18 +61,21 @@ public class MenuService {
         validationUser(userId);
         validationRestaurant(restaurantId);
         Menu menu = findMenuById(menuId);
-        return new MenuResponse(menu.getMenuId(), menu.getMenuName(), menu.getMenuPrice(), menu.getMenuContents(), menu.getCategory());
+        return new MenuResponse(menu.getMenuId(), menu.getMenuName(), menu.getMenuPrice(),
+            menu.getMenuContents(), menu.getCategory());
     }
 
     @Transactional
-    public MenuResponse updateMenu(Long menuId, MenuRequest menuRequest, Long restaurantId, Long userId) {
+    public MenuResponse updateMenu(Long menuId, MenuRequest menuRequest, Long restaurantId,
+        Long userId) {
 
         validationUser(userId);
         validationRestaurant(restaurantId);
 
         Menu menu = findMenuById(menuId);
 
-        menu.update(menuRequest.getMenuName(), menuRequest.getMenuPrice(), menuRequest.getMenuContents(), menuRequest.getCategory());
+        menu.update(menuRequest.getMenuName(), menuRequest.getMenuPrice(),
+            menuRequest.getMenuContents(), menuRequest.getCategory());
 
         return MenuResponse.builder()
             .menuId(menu.getMenuId())
@@ -94,19 +96,19 @@ public class MenuService {
         menuRepository.delete(menu);
     }
 
-    private void validationUser(Long userId){
+    private void validationUser(Long userId) {
         userRepository.findById(userId).orElseThrow(
             () -> new IllegalArgumentException("등록된 유저가 존재하지 않습니다.")
         );
     }
 
-    private void validationRestaurant(Long restaurantId){
+    private void validationRestaurant(Long restaurantId) {
         restaurantRepository.findById(restaurantId).orElseThrow(
             () -> new IllegalArgumentException("등록된 가게가 존재하지 않습니다.")
         );
     }
 
-    private Menu findMenuById(Long menuId){
+    private Menu findMenuById(Long menuId) {
         return menuRepository.findById(menuId).orElseThrow(
             () -> new IllegalArgumentException("메뉴가 존재하지 않습니다.")
         );

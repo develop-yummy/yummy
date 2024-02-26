@@ -6,15 +6,15 @@ import lombok.Getter;
 @Getter
 public class MenuResponse {
 
-    private Long menuId;
+    private final Long menuId;
 
-    private String menuName;
+    private final String menuName;
 
-    private long menuPrice;
+    private final long menuPrice;
 
-    private String menuContents;
+    private final String menuContents;
 
-    private String category;
+    private final String category;
 
     @Builder
     public MenuResponse(Long menuId, String menuName, long menuPrice, String menuContents,

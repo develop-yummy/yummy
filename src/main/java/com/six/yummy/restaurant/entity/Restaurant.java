@@ -9,7 +9,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,7 +18,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Restaurant {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long restaurantId;
 
     @Column(nullable = false)
@@ -38,7 +38,8 @@ public class Restaurant {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    private Restaurant(String restaurantName, String address, String content, String category, User user) {
+    private Restaurant(String restaurantName, String address, String content, String category,
+        User user) {
         this.restaurantName = restaurantName;
         this.address = address;
         this.content = content;
@@ -47,12 +48,13 @@ public class Restaurant {
     }
 
     //생성 메서드
-    public static Restaurant createRestaurant(String restaurantName, String address, String content, String category, User user){
+    public static Restaurant createRestaurant(String restaurantName, String address, String content,
+        String category, User user) {
 
         return new Restaurant(restaurantName, address, content, category, user);
     }
 
-    public void update(String restaurantName, String address, String content, String category){
+    public void update(String restaurantName, String address, String content, String category) {
         this.restaurantName = restaurantName;
         this.address = address;
         this.content = content;
