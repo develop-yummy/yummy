@@ -17,7 +17,7 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
 
     Optional<Review> findByUserAndOrder(User user, Order order);
     List<Review> findByRestaurantIdOrderByCreatedAtDesc(Long restaurantId);
-    @Query("SELECT r FROM Review r LEFT JOIN r.likeList l WHERE r.restaurantId = :restaurantId GROUP BY r.id ORDER BY COUNT(l) DESC")
+    @Query("SELECT r FROM Review r LEFT JOIN r.likeList l WHERE r.restaurantId = :restaurantId GROUP BY r.reviewId ORDER BY COUNT(l) DESC")
     List<Review> findReviewsByRestaurantIdSortedByLikes(@Param("restaurantId") Long restaurantId);
 }
 

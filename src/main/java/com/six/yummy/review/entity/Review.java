@@ -51,7 +51,7 @@ public class Review {
         this.username = getUsername();
         this.point = reviewRequest.getPoint();
         this.content = reviewRequest.getContent();
-        this.restaurantId = order.getRestaurantId();
+        this.restaurantId = order.getRestaurant().getRestaurantId();
         this.user = user;
         this.order = order;
         this.createdAt = LocalDateTime.now();
