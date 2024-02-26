@@ -3,9 +3,11 @@ package com.six.yummy.restaurant.service;
 import com.six.yummy.restaurant.entity.Restaurant;
 import com.six.yummy.restaurant.repository.RestaurantRepository;
 import com.six.yummy.restaurant.requestdto.RestaurantRequest;
+import com.six.yummy.restaurant.responsedto.RestaurantListResponse;
 import com.six.yummy.restaurant.responsedto.RestaurantResponse;
 import com.six.yummy.user.entity.User;
 import com.six.yummy.user.repository.UserRepository;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -69,5 +71,11 @@ public class RestaurantService {
         return restaurantRepository.findById(restaurantId).orElseThrow(
             () -> new IllegalArgumentException("등록된 식당이 존재하지 않습니다.")
             );
+    }
+
+    public List<RestaurantListResponse> getRestaurants() {
+        return restaurantRepository.findAll().stream().map(
+                (Restaurant restaurant) -> new RestaurantListResponse(restaurant.getRestaurantName(), restaurant.getContent()))
+            .toList();
     }
 }
