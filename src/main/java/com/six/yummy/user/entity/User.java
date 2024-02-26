@@ -1,6 +1,5 @@
 package com.six.yummy.user.entity;
 
-import com.six.yummy.global.address.Address;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -36,9 +35,6 @@ public class User {
     @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
     private UserRoleEnum role;
-
-//    @Column(nullable = false)
-//    private Address address;
 
     public User(String username, String password, String email, String phoneNumber,
         UserRoleEnum role) {

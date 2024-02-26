@@ -5,6 +5,7 @@ import lombok.Getter;
 
 @Getter
 public class RestaurantRequest {
+
     @NotBlank
     String restaurantName;
     @NotBlank
