@@ -104,7 +104,8 @@ public class UserService {
     @Transactional
     public void updatePassword(UpdatePasswordRequest request, Long id) {
         User user = findUser(id);
-        if (!passwordEncoderUtil.passwordEncoder().matches(request.getPassword(), user.getPassword())) {
+        if (!passwordEncoderUtil.passwordEncoder()
+            .matches(request.getPassword(), user.getPassword())) {
             throw new RuntimeException("저장된 비밀번호와 일치하지 않습니다");
         }
         if (!request.getNewPassword().equals(request.getConfirmNewPassword())) {
@@ -113,8 +114,17 @@ public class UserService {
         user.updatePassword(request.getNewPassword());
     }
 
+    //회원탈퇴
+    @Transactional
+    public void deleteUser(Long id) {
+        User user = findUser(id);
+        user.softDelete();
+    }
+
+
     private User findUser(Long id) {
         return userRepository.findById(id)
             .orElseThrow(() -> new IllegalArgumentException("없는 회원입니다."));
     }
+
 }

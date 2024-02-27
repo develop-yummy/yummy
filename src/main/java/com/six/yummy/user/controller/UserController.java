@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -54,18 +55,25 @@ public class UserController {
 
     // 회원정보 수정(비밀번호 제외)
     @PutMapping
-    public UserResponse updateUser(@RequestBody UpdateInfoRequest request, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public UserResponse updateUser(@RequestBody UpdateInfoRequest request,
+        @AuthenticationPrincipal UserDetailsImpl userDetails) {
         UserResponse response = userService.updateUser(request, userDetails.getUser().getId());
         return response;
     }
 
     // 회원 비밀번호 수정
     @PutMapping("/password")
-    public String updatePassword(@RequestBody UpdatePasswordRequest request, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public String updatePassword(@RequestBody UpdatePasswordRequest request,
+        @AuthenticationPrincipal UserDetailsImpl userDetails) {
         userService.updatePassword(request, userDetails.getUser().getId());
         return "비밀번호가 수정되었습니다";
     }
 
     // 회원탈퇴
+    @DeleteMapping("/leave")
+    public String deleteUser(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        userService.deleteUser(userDetails.getUser().getId());
+        return "계정이 삭제되었습니다.";
+    }
 
 }
