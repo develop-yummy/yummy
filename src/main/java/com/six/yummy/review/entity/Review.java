@@ -44,11 +44,11 @@ public class Review {
     @JoinColumn(name = "order_id" , nullable = false)
     private Order order;
 
-    @OneToMany (mappedBy = "review")
+    @OneToMany (mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Like> likeList = new ArrayList<>();
 
     public Review (Order order, User user, ReviewRequest reviewRequest){
-        this.username = getUsername();
+        this.username = user.getUsername();
         this.point = reviewRequest.getPoint();
         this.content = reviewRequest.getContent();
         this.restaurantId = order.getRestaurant().getRestaurantId();

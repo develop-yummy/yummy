@@ -8,17 +8,20 @@ import com.six.yummy.review.repository.ReviewRepository;
 import com.six.yummy.review.requestdto.ReviewRequest;
 import com.six.yummy.review.responsedto.ReviewResponse;
 import com.six.yummy.user.entity.User;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class ReviewService {
 
-    private ReviewRepository reviewRepository;
+    private final ReviewRepository reviewRepository;
 
-    private OrderRepository orderRepository;
+    private final OrderRepository orderRepository;
 
     public ReviewResponse createReview(Long orderId, User user, ReviewRequest reviewRequest) {
 
@@ -47,7 +50,7 @@ public class ReviewService {
             return reviewListDTO;}
         else{throw new RuntimeException("레스토랑에 대한 리뷰를 찾을 수 없습니다");}
     }
-
+    @Transactional
     public void deleteReview(Long reviewId, User user) {
         Review review = reviewRepository.findById(reviewId).orElseThrow(()->new IllegalArgumentException("해당하는 리뷰가 없습니다"));
         if(user.getId().equals(review.getUser().getId())){

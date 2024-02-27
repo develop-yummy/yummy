@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor
-@Table(name = "like")
+@Table(name = "likeReview")
 public class Like {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

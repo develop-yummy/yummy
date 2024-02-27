@@ -18,27 +18,27 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ReviewController {
 
-    private ReviewService reviewService;
+    private final ReviewService reviewService;
 
-    @PostMapping("orders/{orderId}/reviews")
+    @PostMapping("/orders/{orderId}/reviews")
     public ResponseEntity<ReviewResponse> postReview(@PathVariable Long orderId, @AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody ReviewRequest reviewRequest) {
 
         ReviewResponse reviewResponse = reviewService.createReview(orderId, userDetails.getUser(), reviewRequest);
         return ResponseEntity.status(201).body(reviewResponse);
     }
 
-    @GetMapping("restaurants/{restaurantId}/review/date")
+    @GetMapping("/restaurant/{restaurantId}/review/date")
     public ResponseEntity<List<ReviewResponse>> getReviewSortedByDate(@PathVariable Long restaurantId) {
         return ResponseEntity.status(200).body(reviewService.getReviewsByRestaurantId(restaurantId));
 
     }
 
-    @GetMapping("restaurants/{restaurantId}/review/like")
+    @GetMapping("/restaurant/{restaurantId}/review/like")
     public ResponseEntity<List<ReviewResponse>> getReviewSortedByLike(@PathVariable Long restaurantId) {
         return ResponseEntity.status(200).body(reviewService.getReviewsByLike(restaurantId));
     }
 
-    @DeleteMapping("/restaurants/reviews/{reviewId}")
+    @DeleteMapping("/restaurant/reviews/delete/{reviewId}")
     public ResponseEntity<Void> deleteReview(@PathVariable Long reviewId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         reviewService.deleteReview(reviewId, userDetails.getUser());
         return ResponseEntity.status(200).build();
