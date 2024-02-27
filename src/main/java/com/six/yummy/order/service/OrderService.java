@@ -2,6 +2,8 @@ package com.six.yummy.order.service;
 
 import com.six.yummy.cartitem.responsedto.CartItemListResponse;
 import com.six.yummy.cartitem.service.CartItemService;
+import com.six.yummy.global.exception.NotFoundOrderException;
+import com.six.yummy.global.exception.ValidateUserException;
 import com.six.yummy.order.entity.Order;
 import com.six.yummy.order.repository.OrderRepository;
 import com.six.yummy.order.responsedto.OrderResponse;
@@ -29,7 +31,7 @@ public class OrderService {
         Restaurant restaurant = restaurantService.findRestaurantById(restaurantId);
         Order order = new Order(user, restaurant);
         orderRepository.save(order);
-        inputOrderId(order.getId(), user);
+        cartItemService.inputOrderId(order.getId(), user);
         List<CartItemListResponse> cartItems = cartItemService.getOrderItems(order.getId());
         return new OrderResponse(order, user, restaurant, cartItems);
     }
@@ -45,20 +47,16 @@ public class OrderService {
 
     public OrderResponse getOrder(Long orderId, User user) {
         Order order = orderRepository.findById(orderId).orElseThrow(
-            () -> new IllegalArgumentException("해당 주문은 삭제되었습니다.")
+            NotFoundOrderException::new
         );
         validateUser(user.getId(), order);
         List<CartItemListResponse> cartItems = cartItemService.getOrderItems(orderId);
         return new OrderResponse(order, cartItems);
     }
 
-    private void inputOrderId(Long orderId, User user) {
-        cartItemService.inputOrderId(orderId, user);
-    }
-
     private void validateUser(Long userId, Order order) {
         if (!userId.equals(order.getUser().getId())) {
-            throw new IllegalArgumentException("해당 주문의 유저가 아닙니다.");
+            throw new ValidateUserException();
         }
     }
 }
