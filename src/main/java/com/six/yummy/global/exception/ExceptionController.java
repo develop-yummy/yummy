@@ -13,7 +13,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class ExceptionController {
 
     @ExceptionHandler({NotFoundUserException.class, NotFoundMenuException.class,
-        NotFoundReviewException.class, NotFoundRestaurantException.class})
+        NotFoundReviewException.class, NotFoundRestaurantException.class,
+        NotFoundCartItemException.class})
     public ResponseEntity<ExceptionDto> NotFoundException(NotFoundException e) {
         return ResponseEntity.badRequest()
             .body(new ExceptionDto(e.getMessage(), HttpStatus.BAD_REQUEST));
