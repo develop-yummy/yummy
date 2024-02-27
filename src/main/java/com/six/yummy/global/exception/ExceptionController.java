@@ -40,10 +40,15 @@ public class ExceptionController {
             .body(new ExceptionDto(e.getMessage(),HttpStatus.BAD_REQUEST));
     }
 
-    @ExceptionHandler(IllegalArgumentFollowException.class)
-    public ResponseEntity<ExceptionDto> IllegalArgumentException(Exception e) {
+    @ExceptionHandler(NotFoundFollowException.class)
+    public ResponseEntity<ExceptionDto> NotFoundDataIntegrityViolationException(Exception e) {
         return ResponseEntity.badRequest()
-            .body(new ExceptionDto(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR));
+            .body(new ExceptionDto(e.getMessage(), HttpStatus.BAD_REQUEST));
     }
 
+    @ExceptionHandler(DataIntegrityViolationFollowException.class)
+    public ResponseEntity<ExceptionDto> DataIntegrityViolationFollowException(Exception e) {
+        return ResponseEntity.badRequest()
+            .body(new ExceptionDto(e.getMessage(), HttpStatus.BAD_REQUEST));
+    }
 }
