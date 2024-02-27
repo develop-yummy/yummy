@@ -28,9 +28,6 @@ public class CartItem {
     @Column(nullable = false)
     private int count;
 
-    @Column(nullable = false)
-    private Boolean state;
-
     @Column
     private Long orderId;
 
@@ -48,7 +45,6 @@ public class CartItem {
         // 외래키 생성 후 user, menu부분 채우기
         this.totalPrice = totalPrice;
         this.count = count;
-        this.state = false;
         this.user = user;
         this.menu = menu;
     }
