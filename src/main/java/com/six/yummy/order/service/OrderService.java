@@ -33,6 +33,10 @@ public class OrderService {
         orderRepository.save(order);
         cartItemService.inputOrderId(order.getId(), user);
         List<CartItemListResponse> cartItems = cartItemService.getOrderItems(order.getId());
+        for (CartItemListResponse cartItem : cartItems) {
+            validateOrder(cartItem, restaurant);
+            order.sumTotalPrice(cartItem.getTotalPrice());
+        }
         return new OrderResponse(order, user, restaurant, cartItems);
     }
 
@@ -57,6 +61,13 @@ public class OrderService {
     private void validateUser(Long userId, Order order) {
         if (!userId.equals(order.getUser().getId())) {
             throw new ValidateUserException();
+        }
+    }
+
+    private void validateOrder(CartItemListResponse cartItem, Restaurant restaurant) {
+        if (!cartItemService.getMenu(cartItem.getMenuId()).getRestaurant().getRestaurantId()
+            .equals(restaurant.getRestaurantId())) {
+            throw new NotFoundOrderException();
         }
     }
 }
