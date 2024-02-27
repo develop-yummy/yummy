@@ -31,6 +31,7 @@ public class CartItem {
     @Column
     private Long orderId;
 
+
     @ManyToOne
     @JoinColumn(name = "userId")
     private User user;
