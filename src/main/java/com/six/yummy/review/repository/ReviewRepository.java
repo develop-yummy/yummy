@@ -1,4 +1,22 @@
 package com.six.yummy.review.repository;
 
-public class ReviewRepository {
+
+import com.six.yummy.order.entity.Order;
+import com.six.yummy.review.entity.Review;
+import com.six.yummy.user.entity.User;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
+import java.util.List;
+import java.util.Optional;
+
+public interface ReviewRepository extends JpaRepository<Review, Long> {
+
+    Optional<Review> findByUserAndOrder(User user, Order order);
+    List<Review> findByRestaurantIdOrderByCreatedAtDesc(Long restaurantId);
+    @Query("SELECT r FROM Review r LEFT JOIN r.likeList l WHERE r.restaurantId = :restaurantId GROUP BY r.reviewId ORDER BY COUNT(l) DESC")
+    List<Review> findReviewsByRestaurantIdSortedByLikes(@Param("restaurantId") Long restaurantId);
 }
+
+
