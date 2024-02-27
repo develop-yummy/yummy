@@ -6,8 +6,11 @@ import com.six.yummy.cartitem.responsedto.CartItemListResponse;
 import com.six.yummy.cartitem.responsedto.CartItemResponse;
 import com.six.yummy.global.exception.NotFoundCartItemException;
 import com.six.yummy.global.exception.NotFoundMenuException;
+import com.six.yummy.global.exception.NotMatchRestaurantException;
 import com.six.yummy.menu.entity.Menu;
 import com.six.yummy.menu.repository.MenuRepository;
+import com.six.yummy.restaurant.entity.Restaurant;
+import com.six.yummy.restaurant.repository.RestaurantRepository;
 import com.six.yummy.user.entity.User;
 import com.six.yummy.user.jwt.JwtUtil;
 import com.six.yummy.user.repository.UserRepository;
@@ -24,8 +27,8 @@ public class CartItemService {
 
     private final CartItemRepository cartItemRepository;
     private final MenuRepository menuRepository;
-    private final JwtUtil jwtUtil;
-    private final UserRepository userRepository;
+    private final RestaurantRepository restaurantRepository;
+
 
     public ResponseEntity<CartItemResponse> cartItemAdd(
         Long menuId, int count, User user) {
@@ -38,7 +41,16 @@ public class CartItemService {
         // 동일한 메뉴와 동일한 사용자가 있는지 확인
         CartItem existingCartItem = cartItemRepository.findByUserAndMenuAndOrderIdIsNull(user, menu);
 
+        List<CartItem> cartItems = cartItemRepository.findAllByUser_idAndOrderIdIsNull(user.getId());
+        Long restaurantId = menu.getRestaurant().getRestaurantId();
+        for (CartItem cartItem : cartItems) {
+            if (cartItem.getMenu().getRestaurant().getRestaurantId() != restaurantId){
+                throw new NotMatchRestaurantException();
+            }
+        }
+
         if (existingCartItem != null) {
+
             existingCartItem.updateCartItemQuantityAndTotalPrice(count);
             cartItemRepository.save(existingCartItem);
         } else {
