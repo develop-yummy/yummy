@@ -39,7 +39,8 @@ public class CartItemService {
         );
 
         // 동일한 메뉴와 동일한 사용자가 있는지 확인
-        CartItem existingCartItem = cartItemRepository.findByUserAndMenuAndOrderIdIsNull(user, menu);
+        CartItem existingCartItem = cartItemRepository.findByUserAndMenuAndOrderIdIsNull(user,
+            menu);
 
         List<CartItem> cartItems = cartItemRepository.findAllByUser_idAndOrderIdIsNull(user.getId());
         Long restaurantId = menu.getRestaurant().getRestaurantId();
@@ -133,5 +134,10 @@ public class CartItemService {
                 cartItem.getCount(),
                 cartItem.getTotalPrice()
             )).toList();
+    }
+
+    public Menu getMenu(Long menuId) {
+        return menuRepository.findById(menuId).orElseThrow(() ->
+            new NullPointerException("메뉴가 없습니다."));
     }
 }
