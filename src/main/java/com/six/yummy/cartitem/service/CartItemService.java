@@ -130,4 +130,9 @@ public class CartItemService {
                 cartItem.getTotalPrice()
             )).toList();
     }
+
+    public Menu getMenu(Long menuId) {
+        return menuRepository.findById(menuId).orElseThrow(() ->
+            new NullPointerException("메뉴가 없습니다."));
+    }
 }
