@@ -35,7 +35,7 @@ public class AddressService {
     }
 
     // 주소 전체 조회
-    public List<AddressResponse> getAddresss() {
+    public List<AddressResponse> getAddresses() {
         List<AddressResponse> responses = addressRepository.findAll().stream().map(
             address -> new AddressResponse(address.getUser().getUsername(), address.getNickname(),
                 address.getCity(), address.getStreet(), address.getZipcode())).toList();
