@@ -1,5 +1,7 @@
 package com.six.yummy.restaurant.service;
 
+import com.six.yummy.global.exception.NotFoundRestaurantException;
+import com.six.yummy.global.exception.NotFoundUserException;
 import com.six.yummy.restaurant.entity.Restaurant;
 import com.six.yummy.restaurant.repository.RestaurantRepository;
 import com.six.yummy.restaurant.requestdto.RestaurantRequest;
@@ -75,13 +77,13 @@ public class RestaurantService {
 
     private void validationUser(Long userId) {
         userRepository.findById(userId).orElseThrow(
-            () -> new IllegalArgumentException("등록된 유저가 존재하지 않습니다.")
+            NotFoundUserException::new
         );
     }
 
     public Restaurant findRestaurantById(Long restaurantId) {
         return restaurantRepository.findById(restaurantId).orElseThrow(
-            () -> new IllegalArgumentException("등록된 식당이 존재하지 않습니다.")
+            NotFoundRestaurantException::new
         );
     }
 

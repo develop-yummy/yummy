@@ -2,11 +2,13 @@ package com.six.yummy.favorite.service;
 
 import com.six.yummy.favorite.entity.Favorite;
 import com.six.yummy.favorite.repository.FavoriteRepository;
-import com.six.yummy.favorite.responsedto.FavoriteResponse;
+import com.six.yummy.global.exception.DataIntegrityViolationFollowException;
+import com.six.yummy.global.exception.NotFoundFollowException;
+import com.six.yummy.global.exception.NotFoundRestaurantException;
+import com.six.yummy.global.exception.NotFoundUserException;
 import com.six.yummy.restaurant.entity.Restaurant;
 import com.six.yummy.restaurant.repository.RestaurantRepository;
 import com.six.yummy.restaurant.responsedto.RestaurantListResponse;
-import com.six.yummy.restaurant.responsedto.RestaurantResponse;
 import com.six.yummy.user.entity.User;
 import com.six.yummy.user.repository.UserRepository;
 import java.util.ArrayList;
@@ -27,18 +29,18 @@ public class FavoriteService {
     @Transactional
     public void saveFavorite(User user, Long restaurantId) {
         User findUser = userRepository.findByUsername(user.getUsername()).orElseThrow(
-            () -> new IllegalArgumentException("유저를 찾지 못했습니다.")
+            NotFoundUserException::new
         );
 
         Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow(
-            () -> new IllegalArgumentException("식당을 찾지 못했습니다.")
+            NotFoundRestaurantException::new
         );
 
         Optional<Favorite> optionalFavorite = favoriteRepository.findByUserAndRestaurant(findUser,
             restaurant);
 
-        if(optionalFavorite.isPresent()){
-            throw new IllegalArgumentException("이미 팔로우가 된 식당입니다.");
+        if (optionalFavorite.isPresent()) {
+            throw new DataIntegrityViolationFollowException();
         }
 
         Favorite favorite = new Favorite(restaurant, findUser);
@@ -49,16 +51,16 @@ public class FavoriteService {
     @Transactional
     public void deleteFavorite(User user, Long restaurantId, Long favoriteId) {
         userRepository.findByUsername(user.getUsername()).orElseThrow(
-            () -> new IllegalArgumentException("유저를 찾지 못했습니다.")
+            NotFoundUserException::new
         );
 
         restaurantRepository.findById(restaurantId).orElseThrow(
-            () -> new IllegalArgumentException("식당을 찾지 못했습니다.")
+            NotFoundRestaurantException::new
         );
 
         Favorite favorite = favoriteRepository.findById(favoriteId).orElseThrow(
-                () -> new IllegalArgumentException("팔로우한 식당을 찾지 못했습니다.")
-            );
+            NotFoundFollowException::new
+        );
 
         favoriteRepository.delete(favorite);
     }
@@ -70,7 +72,7 @@ public class FavoriteService {
         for (Favorite favorite : favorites) {
             Restaurant restaurant = restaurantRepository.findById(
                 favorite.getRestaurant().getRestaurantId()).orElseThrow(
-                () -> new IllegalArgumentException("식당이 존재하지 않습니다.")
+                NotFoundRestaurantException::new
             );
 
             RestaurantListResponse restaurantListResponse = new RestaurantListResponse(

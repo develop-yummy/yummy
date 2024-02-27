@@ -1,5 +1,8 @@
 package com.six.yummy.menu.service;
 
+import com.six.yummy.global.exception.NotFoundMenuException;
+import com.six.yummy.global.exception.NotFoundRestaurantException;
+import com.six.yummy.global.exception.NotFoundUserException;
 import com.six.yummy.menu.entity.Menu;
 import com.six.yummy.menu.repository.MenuRepository;
 import com.six.yummy.menu.requestdto.MenuRequest;
@@ -27,7 +30,7 @@ public class MenuService {
         validationUser(userId);
 
         Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow(
-            () -> new IllegalArgumentException("등록된 가게가 존재하지 않습니다.")
+            NotFoundRestaurantException::new
         );
 
         Menu menu = menuRepository.save(Menu.createMenu(
@@ -49,7 +52,7 @@ public class MenuService {
     @Transactional(readOnly = true)
     public List<MenuListResponse> getMenus(Long restaurantId) {
         Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow(
-            () -> new IllegalArgumentException("등록된 가게가 존재하지 않습니다.")
+            NotFoundRestaurantException::new
         );
 
         return menuRepository.findByRestaurant(restaurant).stream().map(
@@ -98,19 +101,19 @@ public class MenuService {
 
     private void validationUser(Long userId) {
         userRepository.findById(userId).orElseThrow(
-            () -> new IllegalArgumentException("등록된 유저가 존재하지 않습니다.")
+            NotFoundUserException::new
         );
     }
 
     private void validationRestaurant(Long restaurantId) {
         restaurantRepository.findById(restaurantId).orElseThrow(
-            () -> new IllegalArgumentException("등록된 가게가 존재하지 않습니다.")
+            NotFoundRestaurantException::new
         );
     }
 
     private Menu findMenuById(Long menuId) {
         return menuRepository.findById(menuId).orElseThrow(
-            () -> new IllegalArgumentException("메뉴가 존재하지 않습니다.")
+            NotFoundMenuException::new
         );
     }
 
