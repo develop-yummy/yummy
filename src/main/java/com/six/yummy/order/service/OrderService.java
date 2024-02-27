@@ -29,7 +29,7 @@ public class OrderService {
         Restaurant restaurant = restaurantService.findRestaurantById(restaurantId);
         Order order = new Order(user, restaurant);
         orderRepository.save(order);
-        inputOrderId(order.getId(), user);
+        cartItemService.inputOrderId(order.getId(), user);
         List<CartItemListResponse> cartItems = cartItemService.getOrderItems(order.getId());
         return new OrderResponse(order, user, restaurant, cartItems);
     }
@@ -50,10 +50,6 @@ public class OrderService {
         validateUser(user.getId(), order);
         List<CartItemListResponse> cartItems = cartItemService.getOrderItems(orderId);
         return new OrderResponse(order, cartItems);
-    }
-
-    private void inputOrderId(Long orderId, User user) {
-        cartItemService.inputOrderId(orderId, user);
     }
 
     private void validateUser(Long userId, Order order) {
