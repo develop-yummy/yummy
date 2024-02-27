@@ -35,7 +35,7 @@ public class AddressController {
     // 주소 전체 조회
     @GetMapping
     public List<AddressResponse> getAddresses() {
-        return addressService.getAddresss();
+        return addressService.getAddresses();
     }
 
     // 주소 수정

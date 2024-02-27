@@ -1,18 +1,17 @@
 package com.six.yummy.user.service;
 
 import com.six.yummy.global.util.PasswordEncoderUtil;
-import com.six.yummy.address.entity.Address;
 import com.six.yummy.user.entity.User;
 import com.six.yummy.user.entity.UserRoleEnum;
 import com.six.yummy.user.jwt.JwtUtil;
 import com.six.yummy.user.repository.UserRepository;
 import com.six.yummy.user.requestdto.LoginRequest;
 import com.six.yummy.user.requestdto.SignupRequest;
-import com.six.yummy.user.requestdto.UpdateRequest;
+import com.six.yummy.user.requestdto.UpdateInfoRequest;
+import com.six.yummy.user.requestdto.UpdatePasswordRequest;
 import com.six.yummy.user.responsedto.UserResponse;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.Optional;
-import java.util.concurrent.RejectedExecutionException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -94,12 +93,34 @@ public class UserService {
 
     // 회원정보 수정(비밀번호 제외)
     @Transactional
-    public UserResponse updateUser(UpdateRequest request, Long id) {
+    public UserResponse updateUser(UpdateInfoRequest request, Long id) {
         User user = findUser(id);
         user.updateUser(request.getUsername(), request.getEmail(), request.getPhoneNumber());
         return new UserResponse(user.getUsername(), user.getEmail(), user.getPhoneNumber());
 
     }
+
+    // 회원 비밀번호 수정
+    @Transactional
+    public void updatePassword(UpdatePasswordRequest request, Long id) {
+        User user = findUser(id);
+        if (!passwordEncoderUtil.passwordEncoder()
+            .matches(request.getPassword(), user.getPassword())) {
+            throw new RuntimeException("저장된 비밀번호와 일치하지 않습니다");
+        }
+        if (!request.getNewPassword().equals(request.getConfirmNewPassword())) {
+            throw new RuntimeException("새로운 패스워드를 다시 확인해주세요.");
+        }
+        user.updatePassword(request.getNewPassword());
+    }
+
+    //회원탈퇴
+    @Transactional
+    public void deleteUser(Long id) {
+        User user = findUser(id);
+        user.softDelete();
+    }
+
 
     private User findUser(Long id) {
         return userRepository.findById(id)
