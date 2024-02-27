@@ -1,5 +1,7 @@
 package com.six.yummy.user.service;
 
+import com.six.yummy.global.exception.NotFoundUserException;
+import com.six.yummy.global.exception.ValidateUserException;
 import com.six.yummy.global.util.PasswordEncoderUtil;
 import com.six.yummy.user.entity.User;
 import com.six.yummy.user.entity.UserRoleEnum;
@@ -34,28 +36,28 @@ public class UserService {
 
         // 회원 중복확인
         if (userRepository.findByUsername(username).isPresent()) {
-            throw new IllegalArgumentException("이미 존재하는 유저 입니다.");
+            throw new ValidateUserException();
         }
 
         // email 중복확인
         String email = request.getEmail();
         Optional<User> checkEmail = userRepository.findByEmail(email);
         if (checkEmail.isPresent()) {
-            throw new IllegalArgumentException("이미 존재하는 Email 입니다.");
+            throw new ValidateUserException("이미 존재하는 email입니다.");
         }
 
         // 휴대폰 번호 중복확인
         String phoneNumber = request.getPhoneNumber();
         Optional<User> checkPhoneNumber = userRepository.findByPhoneNumber(phoneNumber);
         if (checkPhoneNumber.isPresent()) {
-            throw new IllegalArgumentException(("이미 존재하는 전화번호 입니다."));
+            throw new ValidateUserException(("이미 존재하는 전화번호 입니다."));
         }
 
         // 사용자 ROLE 확인
         UserRoleEnum role = UserRoleEnum.USER;
         if (request.isAdmin()) {
             if (!ADMIN_TOKEN.equals(request.getAdminToken())) {
-                throw new IllegalArgumentException("관리자 암호가 틀려서 등록이 불가능합니다.");
+                throw new ValidateUserException("관리자 암호가 틀려서 등록이 불가능합니다.");
             }
             role = UserRoleEnum.ADMIN;
         }
@@ -71,12 +73,12 @@ public class UserService {
         Optional<User> user = userRepository.findByEmail(
             email); // todo : User user로 접근하는게 좋은지 - 왜냐면 user.get().getPassword() 이렇게 가져와서..
         if (user.isEmpty()) {
-            throw new IllegalArgumentException("존재하지 않는 유저 이메일입니다.");
+            throw new NotFoundUserException("존재하지 않는 유저 이메일입니다.");
         }
 
         // 패스워드 일치 확인
         if (!passwordEncoder.matches(password, user.get().getPassword())) {
-            throw new IllegalArgumentException("비밀번호가 다릅니다.");
+            throw new ValidateUserException("비밀번호가 다릅니다.");
         }
 
         response.setHeader(jwtUtil.AUTHORIZATION_HEADER,
@@ -106,10 +108,10 @@ public class UserService {
         User user = findUser(id);
         if (!passwordEncoderUtil.passwordEncoder()
             .matches(request.getPassword(), user.getPassword())) {
-            throw new RuntimeException("저장된 비밀번호와 일치하지 않습니다");
+            throw new ValidateUserException("저장된 비밀번호와 일치하지 않습니다");
         }
         if (!request.getNewPassword().equals(request.getConfirmNewPassword())) {
-            throw new RuntimeException("새로운 패스워드를 다시 확인해주세요.");
+            throw new NotFoundUserException("새로운 패스워드를 다시 확인해주세요.");
         }
         user.updatePassword(request.getNewPassword());
     }
@@ -124,7 +126,7 @@ public class UserService {
 
     private User findUser(Long id) {
         return userRepository.findById(id)
-            .orElseThrow(() -> new IllegalArgumentException("없는 회원입니다."));
+            .orElseThrow(NotFoundUserException::new);
     }
 
 }

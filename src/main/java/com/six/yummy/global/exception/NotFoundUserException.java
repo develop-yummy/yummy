@@ -4,4 +4,8 @@ public class NotFoundUserException extends IllegalArgumentException{
     public NotFoundUserException() {
         super("회원을 찾을 수 없습니다.");
     }
+
+    public NotFoundUserException(String s) {
+        super(s);
+    }
 }
