@@ -21,7 +21,7 @@ public class ReviewController {
     private ReviewService reviewService;
 
     @PostMapping("orders/{orderId}/reviews")
-    public ResponseEntity<ReviewResponse> postReview (@PathVariable Long orderId , @AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody ReviewRequest reviewRequest){
+    public ResponseEntity<ReviewResponse> postReview(@PathVariable Long orderId, @AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody ReviewRequest reviewRequest) {
 
         ReviewResponse reviewResponse = reviewService.createReview(orderId, userDetails.getUser(), reviewRequest);
         return ResponseEntity.status(201).body(reviewResponse);
@@ -34,19 +34,16 @@ public class ReviewController {
     }
 
     @GetMapping("restaurants/{restaurantId}/review/like")
-    public ResponseEntity<List<ReviewResponse>> getReviewSortedByLike(@PathVariable Long restaurantId){
+    public ResponseEntity<List<ReviewResponse>> getReviewSortedByLike(@PathVariable Long restaurantId) {
         return ResponseEntity.status(200).body(reviewService.getReviewsByLike(restaurantId));
     }
 
     @DeleteMapping("/restaurants/reviews/{reviewId}")
-    public ResponseEntity<Void> deleteReview(@PathVariable Long reviewId, @AuthenticationPrincipal UserDetailsImpl userDetails){
+    public ResponseEntity<Void> deleteReview(@PathVariable Long reviewId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         reviewService.deleteReview(reviewId, userDetails.getUser());
         return ResponseEntity.status(200).build();
 
     }
-
-
-
 
 
 }

@@ -1,11 +1,9 @@
 package com.six.yummy.review.repository;
 
-import com.six.yummy.like.entity.Like;
+
 import com.six.yummy.order.entity.Order;
 import com.six.yummy.review.entity.Review;
 import com.six.yummy.user.entity.User;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
