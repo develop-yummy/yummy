@@ -41,12 +41,11 @@ public class CartItemController {
 
     @DeleteMapping("/{cartItemId}")
     public ResponseEntity<CartItemResponse> cartItemDelete(
-        @PathVariable Long menuId,
         @PathVariable Long cartItemId,
         @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
         // Spring Security 추가 후 @AuthenticationPrincipal 추가
-        return cartItemService.cartItemDelete(menuId, cartItemId, userDetails.getUser());
+        return cartItemService.cartItemDelete(cartItemId, userDetails.getUser());
     }
 
     @DeleteMapping

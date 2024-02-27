@@ -4,6 +4,8 @@ import com.six.yummy.cartitem.entity.CartItem;
 import com.six.yummy.cartitem.repository.CartItemRepository;
 import com.six.yummy.cartitem.responsedto.CartItemListResponse;
 import com.six.yummy.cartitem.responsedto.CartItemResponse;
+import com.six.yummy.global.exception.NotFoundCartItemException;
+import com.six.yummy.global.exception.NotFoundMenuException;
 import com.six.yummy.menu.entity.Menu;
 import com.six.yummy.menu.repository.MenuRepository;
 import com.six.yummy.user.entity.User;
@@ -29,7 +31,9 @@ public class CartItemService {
         Long menuId, int count, User user) {
 
         // 메뉴 검증 로직
-        Menu menu = menuRepository.findById(menuId).orElseThrow();
+        Menu menu = menuRepository.findById(menuId).orElseThrow(
+            NotFoundMenuException::new
+        );
 
         // 동일한 메뉴와 동일한 사용자가 있는지 확인
         CartItem existingCartItem = cartItemRepository.findByUserAndMenuAndOrderIdIsNull(user, menu);
@@ -69,15 +73,11 @@ public class CartItemService {
     }
 
 
-    public ResponseEntity<CartItemResponse> cartItemDelete(
-        Long menuId, Long cartItemId, User user
-    ) {
-        // 메뉴 검증 로직
-//        Menu menu = menuRepository.findById(menuId)
+    public ResponseEntity<CartItemResponse> cartItemDelete(Long cartItemId, User user) {
 
         // 장바구니 검증 로직
         CartItem deleteCartItem = cartItemRepository.findById(cartItemId).orElseThrow(
-            IllegalArgumentException::new
+            NotFoundCartItemException::new
         );
 
         if (!Objects.equals(deleteCartItem.getUser().getId(), user.getId())) {
@@ -106,7 +106,7 @@ public class CartItemService {
         List<CartItem> cartItems = cartItemRepository.findAllByUser_idAndOrderIdIsNull(
             user.getId());
         if (cartItems.isEmpty()) {
-            throw new NullPointerException("카트가 비어있습니다.");
+            throw new NullPointerException("장바구니가 비었습니다");
         }
         for (CartItem cartItem : cartItems) {
             cartItem.inputOrderId(orderId);
