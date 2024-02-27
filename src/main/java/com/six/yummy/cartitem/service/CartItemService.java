@@ -32,7 +32,7 @@ public class CartItemService {
         Menu menu = menuRepository.findById(menuId).orElseThrow();
 
         // 동일한 메뉴와 동일한 사용자가 있는지 확인
-        CartItem existingCartItem = cartItemRepository.findByUserAndMenu(user, menu);
+        CartItem existingCartItem = cartItemRepository.findByUserAndMenuAndOrderIdIsNull(user, menu);
 
         if (existingCartItem != null) {
             existingCartItem.updateCartItemQuantityAndTotalPrice(count);
@@ -60,10 +60,9 @@ public class CartItemService {
         Long userId = user.getId();
 
 //        return new CartItemListResponse(cartItems);
-        return cartItemRepository.findByUser_idAndStateFalse(userId).stream().map(
+        return cartItemRepository.findByUser_id(userId).stream().map(
             (CartItem cartItem) -> new CartItemListResponse(
                 cartItem.getMenu().getMenuId(),
-                cartItem.getState(),
                 cartItem.getCount(),
                 cartItem.getTotalPrice()
             )).toList();
@@ -92,7 +91,7 @@ public class CartItemService {
 
     public ResponseEntity<CartItemResponse> cartItemDeleteAll(User user) {
 
-        List<CartItem> cartItems = cartItemRepository.findByUser_idAndStateFalse(user.getId());
+        List<CartItem> cartItems = cartItemRepository.findByUser_id(user.getId());
 
         if (!cartItems.isEmpty()) {
             cartItemRepository.deleteAll(cartItems);
@@ -119,7 +118,6 @@ public class CartItemService {
         return cartItemRepository.findAllByOrderId(orderId).stream().map(
             (CartItem cartItem) -> new CartItemListResponse(
                 cartItem.getMenu().getMenuId(),
-                cartItem.getState(),
                 cartItem.getCount(),
                 cartItem.getTotalPrice()
             )).toList();

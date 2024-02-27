@@ -8,9 +8,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface CartItemRepository extends JpaRepository<CartItem, Long> {
 
-    List<CartItem> findByUser_idAndStateFalse(Long userId);
+    List<CartItem> findByUser_id(Long userId);
 
-    CartItem findByUserAndMenu(User user, Menu menu);
+    CartItem findByUserAndMenuAndOrderIdIsNull(User user, Menu menu);
 
     List<CartItem> findAllByUser_idAndOrderIdIsNull(Long userId);
 
