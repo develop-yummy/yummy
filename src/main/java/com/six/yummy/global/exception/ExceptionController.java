@@ -51,4 +51,10 @@ public class ExceptionController {
         return ResponseEntity.badRequest()
             .body(new ExceptionDto(e.getMessage(), HttpStatus.BAD_REQUEST));
     }
+
+    @ExceptionHandler(NotMatchRestaurantException.class)
+    public ResponseEntity<ExceptionDto> NotMatchRestaurantException(Exception e){
+        return ResponseEntity.badRequest()
+            .body(new ExceptionDto(e.getMessage(), HttpStatus.BAD_REQUEST));
+    }
 }

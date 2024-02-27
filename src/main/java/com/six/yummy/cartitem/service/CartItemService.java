@@ -9,6 +9,8 @@ import com.six.yummy.global.exception.NotFoundMenuException;
 import com.six.yummy.menu.entity.Menu;
 import com.six.yummy.menu.repository.MenuRepository;
 import com.six.yummy.user.entity.User;
+import com.six.yummy.user.jwt.JwtUtil;
+import com.six.yummy.user.repository.UserRepository;
 import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +37,16 @@ public class CartItemService {
         CartItem existingCartItem = cartItemRepository.findByUserAndMenuAndOrderIdIsNull(user,
             menu);
 
+        List<CartItem> cartItems = cartItemRepository.findAllByUser_idAndOrderIdIsNull(user.getId());
+        Long restaurantId = menu.getRestaurant().getRestaurantId();
+        for (CartItem cartItem : cartItems) {
+            if (cartItem.getMenu().getRestaurant().getRestaurantId() != restaurantId){
+                throw new NotMatchRestaurantException();
+            }
+        }
+
         if (existingCartItem != null) {
+
             existingCartItem.updateCartItemQuantityAndTotalPrice(count);
             cartItemRepository.save(existingCartItem);
         } else {
