@@ -1,5 +1,7 @@
 package com.six.yummy.like.service;
 
+import com.six.yummy.global.exception.DataIntegrityViolationLikeException;
+import com.six.yummy.global.exception.NotFoundReviewException;
 import com.six.yummy.like.entity.Like;
 import com.six.yummy.like.repository.LikeRepository;
 import com.six.yummy.like.requestdto.LikeRequest;
@@ -23,7 +25,7 @@ public class LikeService {
 
     @Transactional
     public LikeResponse createLike(Long reveiwId, User user) {
-        Review review = reviewRepository.findById(reveiwId).orElseThrow(() -> new IllegalArgumentException("리뷰를 찾을 수 없습니다."));
+        Review review = reviewRepository.findById(reveiwId).orElseThrow(() -> new NotFoundReviewException());
 
         if (!likeRepository.findByUserAndReview(user, review).isPresent()) {
             Like like = new Like(user, review);
@@ -33,7 +35,7 @@ public class LikeService {
 
             return new LikeResponse(like, "좋아요 하셨습니다");
         } else {
-            throw new IllegalArgumentException("이미 좋아요 하신 리뷰입니다");
+            throw new DataIntegrityViolationLikeException();
         }
     }
 
