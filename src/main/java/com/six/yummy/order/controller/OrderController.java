@@ -21,7 +21,7 @@ public class OrderController {
 
     private final OrderService orderService;
 
-    @PostMapping("/restaurant/{restaurantId}/orders")
+    @PostMapping("/restaurants/{restaurantId}/orders")
     public ResponseEntity<OrderResponse> createOrder(@PathVariable Long restaurantId, @AuthenticationPrincipal
     UserDetailsImpl userDetails) {
         OrderResponse orderResponse = orderService.createOrder(restaurantId, userDetails.getUser());
