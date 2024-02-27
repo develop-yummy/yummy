@@ -22,15 +22,6 @@ public class SignupRequest {
     @NotBlank
     private String phoneNumber;
 
-    @NotBlank
-    private String city;
-
-    @NotBlank
-    private String street;
-
-    @NotBlank
-    private String zipCode;
-
     private boolean admin = false;
 
     private String adminToken = "";
