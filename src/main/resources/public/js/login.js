@@ -11,6 +11,8 @@ signInButton.addEventListener('click', () => {
 });
 
 $(document).ready(function(){
+  sessionStorage.removeItem('Authorization');
+
 
   // Sign Up 버튼 클릭 시 요청 보내기
   $("#postSignUp").click(function(){
@@ -18,13 +20,12 @@ $(document).ready(function(){
     console.log("Sign Up 요청을 보냈습니다.");
     // 여기에 요청을 보내는 코드 작성
     var userData = {
-      email: $("input[placeholder='Email']").val(),
-      password: $("input[placeholder='Password']").val(),
-      username: $("input[placeholder='UserName']").val(),
-      phoneNumber: $("input[placeholder='phoneNumber']").val(),
-      zipCode: $("input[placeholder='Zip Code']").val(),
-      city: $("input[placeholder='City']").val(),
-      street: $("input[placeholder='Street']").val()
+      email: $("#signUpEmail").val(),
+      password: $("#signUpPassword").val(),
+      username: $("#signUpUserName").val(),
+      phoneNumber: $("#signUpPhoneNumber").val(),
+      adminToken : $("#signUpAdminToken").val(),
+      admin : true
     };
     console.log(userData);
     // 서버로 POST 요청 보내기
@@ -36,7 +37,8 @@ $(document).ready(function(){
       success: function(response) {
         // 요청이 성공했을 때 실행할 코드 작성
         console.log("회원가입 요청이 성공했습니다.");
-        console.log("서버 응답:", response);
+        alert("회원가입에 성공하였습니다.");
+        location.reload();
       },
       error: function(xhr, status, error) {
         // 요청이 실패했을 때 실행할 코드 작성
@@ -51,6 +53,35 @@ $(document).ready(function(){
   // Sign In 버튼 클릭 시 요청 보내기
   $("#postSignIn").click(function(){
     // 여기에 요청을 보내는 코드 작성
+    event.preventDefault(); // 기본 동작 막기
     console.log("Sign In 요청을 보냈습니다.");
+    var userData = {
+      email: $("#signInEmail").val(),
+      password: $("#signInPassword").val(),
+    };
+    $.ajax({
+      url: "http://localhost:8080/v1/api/users/login", // 서버의 실제 URL로 변경해야 합니다.
+      type: "POST",
+      data: JSON.stringify(userData),
+      contentType: "application/json", // 요청 헤더에 JSON 형식 설정
+      success: function (response, status, xhr) {
+        // 요청이 성공했을 때 실행할 코드 작성
+        console.log("회원가입 요청이 성공했습니다.");
+        // 응답 객체의 헤더에서 Authorization 헤더의 값을 가져오기
+        var authorizationHeader = xhr.getResponseHeader("Authorization");
+
+        // 토큰을 로컬 스토리지에 저장
+        sessionStorage.setItem('Authorization', authorizationHeader);
+        console.log(authorizationHeader);
+        alert("로그인에 성공하였습니다.");
+        window.location.href = "/mainpage.html";
+
+      },
+      error: function (xhr, status, error) {
+        // 요청이 실패했을 때 실행할 코드 작성
+        console.error("회원가입 요청이 실패했습니다.");
+        console.error("에러 메시지:", error);
+      }
+    });
   });
 });
