@@ -12,8 +12,6 @@ import com.six.yummy.menu.repository.MenuRepository;
 import com.six.yummy.restaurant.entity.Restaurant;
 import com.six.yummy.restaurant.repository.RestaurantRepository;
 import com.six.yummy.user.entity.User;
-import com.six.yummy.user.jwt.JwtUtil;
-import com.six.yummy.user.repository.UserRepository;
 import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
@@ -27,8 +25,6 @@ public class CartItemService {
 
     private final CartItemRepository cartItemRepository;
     private final MenuRepository menuRepository;
-    private final RestaurantRepository restaurantRepository;
-
 
     public ResponseEntity<CartItemResponse> cartItemAdd(
         Long menuId, int count, User user) {
