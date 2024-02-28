@@ -24,9 +24,11 @@ $(document).ready(function(){
       password: $("#signUpPassword").val(),
       username: $("#signUpUserName").val(),
       phoneNumber: $("#signUpPhoneNumber").val(),
-      adminToken : $("#signUpAdminToken").val(),
-      admin : true
+      adminToken: $("#signUpAdminToken").val(),
+      // adminToken 값에 따라 admin 필드 값을 조건적으로 설정
+      admin: $("#signUpAdminToken").val() === "" ? false : true
     };
+
     console.log(userData);
     // 서버로 POST 요청 보내기
     $.ajax({
@@ -36,7 +38,7 @@ $(document).ready(function(){
       contentType: "application/json", // 요청 헤더에 JSON 형식 설정
       success: function(response) {
         // 요청이 성공했을 때 실행할 코드 작성
-        console.log("회원가입 요청이 성공했습니다.");
+        console.log(response);
         alert("회원가입에 성공하였습니다.");
         location.reload();
       },
@@ -66,16 +68,23 @@ $(document).ready(function(){
       contentType: "application/json", // 요청 헤더에 JSON 형식 설정
       success: function (response, status, xhr) {
         // 요청이 성공했을 때 실행할 코드 작성
-        console.log("회원가입 요청이 성공했습니다.");
+        console.log("로그인 요청이 성공했습니다.");
         // 응답 객체의 헤더에서 Authorization 헤더의 값을 가져오기
         var authorizationHeader = xhr.getResponseHeader("Authorization");
 
         // 토큰을 로컬 스토리지에 저장
         sessionStorage.setItem('Authorization', authorizationHeader);
         console.log(authorizationHeader);
-        alert("로그인에 성공하였습니다.");
-        window.location.href = "/mainpage.html";
+        console.log(response);
 
+        // response 값에 따른 조건 처리
+        if (response === "USER") {
+          alert("일반 사용자는 관리자 페이지에 접근할 수 없습니다.");
+          window.location.reload();
+        } else if (response === "ADMIN") {
+          alert("환영합니다 관리자님");
+          window.location.href = "/mainpage.html"; // 관리자 페이지로 이동
+        }
       },
       error: function (xhr, status, error) {
         // 요청이 실패했을 때 실행할 코드 작성
