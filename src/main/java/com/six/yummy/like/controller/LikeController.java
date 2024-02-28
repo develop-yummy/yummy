@@ -18,8 +18,7 @@ public class LikeController {
 
     @PostMapping("/{reveiwId}/likes")
     public ResponseEntity<LikeResponse> createLike(@PathVariable Long reveiwId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        likeService.createLike(reveiwId, userDetails.getUser());
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().body(likeService.createLike(reveiwId, userDetails.getUser()));
     }
 
     @DeleteMapping("/{likeId}/likes/delete")

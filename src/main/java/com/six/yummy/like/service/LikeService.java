@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
 import java.util.concurrent.RejectedExecutionException;
 
 @Service
@@ -27,15 +28,21 @@ public class LikeService {
     public LikeResponse createLike(Long reveiwId, User user) {
         Review review = reviewRepository.findById(reveiwId).orElseThrow(() -> new NotFoundReviewException());
 
-        if (!likeRepository.findByUserAndReview(user, review).isPresent()) {
+        // 이미 좋아요가 존재하면 삭제
+        if (likeRepository.findByUserAndReview(user, review).isPresent()) {
+            Like like = likeRepository.findByUserAndReview(user, review).get();
+            like.removeReview(review);//리뷰의 좋아요 리스트에서 제거.
+            reviewRepository.save(review);
+//            likeRepository.delete(like);
+            return new LikeResponse("좋아요가 취소되었습니다");
+        } else {
             Like like = new Like(user, review);
             like.setReview(review); // 해당 리뷰에 좋아요 추가(리스트 형태)
             reviewRepository.save(review);
-            likeRepository.save(like);
+//            likeRepository.save(like);
 
             return new LikeResponse(like, "좋아요 하셨습니다");
-        } else {
-            throw new DataIntegrityViolationLikeException();
+
         }
     }
 
