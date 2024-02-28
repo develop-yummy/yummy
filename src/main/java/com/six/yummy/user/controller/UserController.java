@@ -1,5 +1,6 @@
 package com.six.yummy.user.controller;
 
+import com.six.yummy.user.entity.UserRoleEnum;
 import com.six.yummy.user.lmpl.UserDetailsImpl;
 import com.six.yummy.user.requestdto.LoginRequest;
 import com.six.yummy.user.requestdto.SignupRequest;
@@ -41,9 +42,8 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody LoginRequest request, HttpServletResponse response) {
-        userService.login(request, response);
-        return "로그인 성공";
+    public UserRoleEnum login(@RequestBody LoginRequest request, HttpServletResponse response) {
+        return userService.login(request, response);
     }
 
     // 회원정보 단건 조회

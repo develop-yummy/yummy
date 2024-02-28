@@ -65,7 +65,7 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public void login(LoginRequest request, HttpServletResponse response) {
+    public UserRoleEnum login(LoginRequest request, HttpServletResponse response) {
         String email = request.getEmail();
         String password = request.getPassword();
 
@@ -83,6 +83,8 @@ public class UserService {
 
         response.setHeader(jwtUtil.AUTHORIZATION_HEADER,
             jwtUtil.createToken(user.get().getUsername(), user.get().getRole()));
+
+        return user.get().getRole();
     }
 
 
