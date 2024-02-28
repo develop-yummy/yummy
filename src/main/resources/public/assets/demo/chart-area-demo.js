@@ -2,21 +2,19 @@
 Chart.defaults.global.defaultFontFamily = '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
 Chart.defaults.global.defaultFontColor = '#292b2c';
 
-// Area Chart Example
-var ctx = document.getElementById("myAreaChart");
-
-var labels = [];
-
 // 오늘 날짜를 기준으로 15일 전부터 오늘까지의 날짜를 생성하여 라벨 배열에 추가
+var labels = [];
 for (var i = 15; i >= 0; i--) {
   var date = new Date();
-  date.setDate(date.getDate() - i); // i일 전의 날짜 계산
-  var month = String(date.getMonth() + 1).padStart(2, '0'); // 월
-  var day = String(date.getDate()).padStart(2, '0'); // 일
-  var label = month + '/' + day; // '월 일' 형식의 라벨 생성
-  labels.push(label); // 라벨 배열에 추가
+  date.setDate(date.getDate() - i);
+  var month = String(date.getMonth() + 1).padStart(2, '0');
+  var day = String(date.getDate()).padStart(2, '0');
+  var label = month + '/' + day;
+  labels.push(label);
 }
 
+// 차트 초기화 (데이터는 나중에 채워짐)
+var ctx = document.getElementById("myAreaChart");
 var myLineChart = new Chart(ctx, {
   type: 'line',
   data: {
@@ -33,9 +31,8 @@ var myLineChart = new Chart(ctx, {
       pointHoverBackgroundColor: "rgba(2,117,216,1)",
       pointHitRadius: 50,
       pointBorderWidth: 2,
-      // jquery로 데이터 넣어줄 부분
-      data: [10000, 30162, 26263, 18394, 18287, 28682, 31274, 33259, 25849, 24159, 32651, 31984, 38451],
-    }],
+      data: [], // 초기 데이터는 비워둠
+    }]
   },
   options: {
     scales: {
@@ -65,4 +62,38 @@ var myLineChart = new Chart(ctx, {
       display: false
     }
   }
+});
+
+// 스프링부트 서버로부터 데이터를 받아와 차트에 적용
+$(document).ready(function() {
+  $.ajax({
+    url: "http://localhost:8080/backoffice/sales/month", // 스프링부트 백엔드 URL로 변경
+    type: "GET",
+    dataType: "json",
+    beforeSend: function(xhr) {
+      // 세션 스토리지에서 토큰 가져오기
+      var token = sessionStorage.getItem("Authorization");
+      if (token) {
+        // 요청 헤더에 토큰 추가
+        xhr.setRequestHeader("Authorization", token);
+        console.log("토큰 준비 완료");
+      }
+    },
+    success: function(response) {
+      // 서버로부터 받은 데이터가 객체 형태이므로, 배열로 변환
+      var sortedKeys = Object.keys(response).sort((a, b) => a - b);
+      var salesData = sortedKeys.map(key => response[key]);
+
+      // 정렬된 키와 데이터 콘솔에 출력
+      console.log("정렬된 키:", sortedKeys);
+      console.log("정렬된 데이터:", salesData);
+
+      // 차트 데이터 업데이트
+      myLineChart.data.datasets[0].data = salesData;
+      myLineChart.update();
+    },
+    error: function(xhr, status, error) {
+      console.error("Data loading failed: ", error);
+    }
+  });
 });
