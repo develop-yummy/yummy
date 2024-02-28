@@ -60,47 +60,32 @@ public class BackOfficeService {
         return restaurantSalesResponses;
     }
 
-//    public List<TotalSalesResponse> getTotalSales(User user) {
-//
-//        validateUser(user);
-//
-//        LocalDateTime startDate = LocalDateTime.now().minusDays(15);
-//        LocalDateTime endDate = LocalDateTime.now();
-//
-//        List<Order> orders = orderRepository.findByOrderedAtBetween(startDate, endDate);
-//
-//        Map<Integer, Integer> priceList = new LinkedHashMap<>();
-//        for (Order order : orders) {
-//            priceList.put(order.getOrderedAt().getDayOfYear()
-//                , priceList.getOrDefault(order.getOrderedAt().getDayOfYear(), order.getTotalPrice()) + order.getTotalPrice());
-//        }
-//
-//        int startDay = startDate.getDayOfYear();
-//        int endDay = endDate.getDayOfYear();
-//        for (int i = startDay; i < endDay; i++) {
-//            if(!priceList.containsKey(i)){
-//                priceList.put(i, 0);
-//            }
-//        }
+    public Map<Integer, Integer> getTotalSales(User user) {
 
+        validateUser(user);
 
+        LocalDateTime startDate = LocalDateTime.now().minusDays(15);
+        LocalDateTime endDate = LocalDateTime.now();
 
+        List<Order> orders = orderRepository.findByOrderedAtBetween(startDate, endDate);
 
-//        List<Long> priceList = new ArrayList<>();
-//
-//        for (int i = 0; i < 15; i++) {
-//            LocalDateTime start = LocalDateTime.now().minusDays(i);
-//            LocalDateTime end = LocalDateTime.now();
-//
-//            Long price = 0L;
-//
-//            List<Order> orders1 = orderRepository.findByOrderedAtBetween(start, end);
-//            for (Order order : orders1) {
-//                price += order.getTotalPrice();
-//            }
-//            priceList.add(price);
-//        }
-//    }
+        Map<Integer, Integer> priceList = new LinkedHashMap<>();
+        for (Order order : orders) {
+            priceList.put(order.getOrderedAt().getDayOfYear()
+                , priceList.getOrDefault(order.getOrderedAt().getDayOfYear(), order.getTotalPrice())
+                    + order.getTotalPrice());
+        }
+
+        int startDay = startDate.getDayOfYear();
+        int endDay = endDate.getDayOfYear();
+        for (int i = startDay; i < endDay; i++) {
+            if (!priceList.containsKey(i)) {
+                priceList.put(i, 0);
+            }
+        }
+
+        return priceList;
+    }
 
     private void validateUser(User user){
         if(user.getRole() != UserRoleEnum.ADMIN){
