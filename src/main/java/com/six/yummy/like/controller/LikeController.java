@@ -11,22 +11,21 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/v1/restaurant/reviews")
+@RequestMapping("/v1/restaurants/reviews")
 public class LikeController {
 
     private final LikeService likeService;
 
     @PostMapping("/{reveiwId}/likes")
     public ResponseEntity<LikeResponse> createLike(@PathVariable Long reveiwId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        likeService.createLike(reveiwId, userDetails.getUser());
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().body(likeService.createLike(reveiwId, userDetails.getUser()));
     }
 
-    @DeleteMapping("/{likeId}/likes/delete")
-    public ResponseEntity<Void> deleteLike(@PathVariable Long likeId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        likeService.deleteLike(likeId, userDetails.getUser());
-        return ResponseEntity.ok().build();
-    }
+//    @DeleteMapping("/{likeId}/likes/delete")
+//    public ResponseEntity<Void> deleteLike(@PathVariable Long likeId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+//        likeService.deleteLike(likeId, userDetails.getUser());
+//        return ResponseEntity.ok().build();
+//    }
 
 
 }

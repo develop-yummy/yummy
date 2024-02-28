@@ -35,6 +35,8 @@ public class Review {
 
     private LocalDateTime createdAt;
 
+    private int likeCount;
+
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id" , nullable = false)
@@ -55,6 +57,7 @@ public class Review {
         this.user = user;
         this.order = order;
         this.createdAt = LocalDateTime.now();
+        this.likeCount = getLikesCount();
 
     }
 
