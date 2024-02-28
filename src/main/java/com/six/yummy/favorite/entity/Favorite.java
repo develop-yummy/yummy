@@ -34,4 +34,6 @@ public class Favorite {
         this.restaurant = restaurant;
         this.user = user;
     }
+
+
 }
