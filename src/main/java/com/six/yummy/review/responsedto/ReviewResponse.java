@@ -15,13 +15,15 @@ public class ReviewResponse {
     private Short point;
     private String content;
     private LocalDateTime createdAt;
+    private int likeCount;
 
-    public ReviewResponse (Review review){
+    public ReviewResponse(Review review) {
         this.reviewId = review.getReviewId();
         this.username = review.getUsername();
         this.point = review.getPoint();
         this.content = review.getContent();
         this.createdAt = LocalDateTime.now();
+        this.likeCount = review.getLikesCount();
     }
 
 

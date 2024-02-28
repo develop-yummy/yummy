@@ -27,13 +27,13 @@ public class ReviewController {
         return ResponseEntity.status(201).body(reviewResponse);
     }
 
-    @GetMapping("/restaurants/{restaurantId}/review/date")
+    @GetMapping("/restaurants/{restaurantId}/reviews/date")
     public ResponseEntity<List<ReviewResponse>> getReviewSortedByDate(@PathVariable Long restaurantId) {
         return ResponseEntity.status(200).body(reviewService.getReviewsByRestaurantId(restaurantId));
 
     }
 
-    @GetMapping("/restaurants/{restaurantId}/review/like")
+    @GetMapping("/restaurants/{restaurantId}/reviews/like")
     public ResponseEntity<List<ReviewResponse>> getReviewSortedByLike(@PathVariable Long restaurantId) {
         return ResponseEntity.status(200).body(reviewService.getReviewsByLike(restaurantId));
     }
