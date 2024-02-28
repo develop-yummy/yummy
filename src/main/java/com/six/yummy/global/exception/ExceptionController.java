@@ -1,8 +1,6 @@
 package com.six.yummy.global.exception;
 
 import com.six.yummy.global.exception.dto.ExceptionDto;
-import javax.xml.crypto.Data;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,11 +31,12 @@ public class ExceptionController {
             .body(new ExceptionDto(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR));
     }
 
-    @ExceptionHandler({DataIntegrityViolationReviewException.class, DataIntegrityViolationLikeException.class})
+    @ExceptionHandler({DataIntegrityViolationReviewException.class,
+        DataIntegrityViolationLikeException.class})
     public ResponseEntity<ExceptionDto> DataIntegrityViolationException(
         Exception e) {
         return ResponseEntity.badRequest()
-            .body(new ExceptionDto(e.getMessage(),HttpStatus.BAD_REQUEST));
+            .body(new ExceptionDto(e.getMessage(), HttpStatus.BAD_REQUEST));
     }
 
     @ExceptionHandler(NotFoundFollowException.class)
