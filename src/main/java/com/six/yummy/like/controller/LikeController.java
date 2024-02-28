@@ -21,11 +21,11 @@ public class LikeController {
         return ResponseEntity.ok().body(likeService.createLike(reveiwId, userDetails.getUser()));
     }
 
-    @DeleteMapping("/{likeId}/likes/delete")
-    public ResponseEntity<Void> deleteLike(@PathVariable Long likeId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        likeService.deleteLike(likeId, userDetails.getUser());
-        return ResponseEntity.ok().build();
-    }
+//    @DeleteMapping("/{likeId}/likes/delete")
+//    public ResponseEntity<Void> deleteLike(@PathVariable Long likeId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+//        likeService.deleteLike(likeId, userDetails.getUser());
+//        return ResponseEntity.ok().build();
+//    }
 
 
 }
