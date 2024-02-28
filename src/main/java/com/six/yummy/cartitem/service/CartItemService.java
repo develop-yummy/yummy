@@ -9,8 +9,6 @@ import com.six.yummy.global.exception.NotFoundMenuException;
 import com.six.yummy.menu.entity.Menu;
 import com.six.yummy.menu.repository.MenuRepository;
 import com.six.yummy.user.entity.User;
-import com.six.yummy.user.jwt.JwtUtil;
-import com.six.yummy.user.repository.UserRepository;
 import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
@@ -24,8 +22,6 @@ public class CartItemService {
 
     private final CartItemRepository cartItemRepository;
     private final MenuRepository menuRepository;
-    private final JwtUtil jwtUtil;
-    private final UserRepository userRepository;
 
     public ResponseEntity<CartItemResponse> cartItemAdd(
         Long menuId, int count, User user) {
@@ -36,7 +32,8 @@ public class CartItemService {
         );
 
         // 동일한 메뉴와 동일한 사용자가 있는지 확인
-        CartItem existingCartItem = cartItemRepository.findByUserAndMenuAndOrderIdIsNull(user, menu);
+        CartItem existingCartItem = cartItemRepository.findByUserAndMenuAndOrderIdIsNull(user,
+            menu);
 
         if (existingCartItem != null) {
             existingCartItem.updateCartItemQuantityAndTotalPrice(count);
