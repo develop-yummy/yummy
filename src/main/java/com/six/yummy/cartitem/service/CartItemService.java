@@ -9,6 +9,8 @@ import com.six.yummy.global.exception.NotFoundMenuException;
 import com.six.yummy.global.exception.NotMatchRestaurantException;
 import com.six.yummy.menu.entity.Menu;
 import com.six.yummy.menu.repository.MenuRepository;
+import com.six.yummy.restaurant.entity.Restaurant;
+import com.six.yummy.restaurant.repository.RestaurantRepository;
 import com.six.yummy.user.entity.User;
 import java.util.List;
 import java.util.Objects;
@@ -36,11 +38,10 @@ public class CartItemService {
         CartItem existingCartItem = cartItemRepository.findByUserAndMenuAndOrderIdIsNull(user,
             menu);
 
-        List<CartItem> cartItems = cartItemRepository.findAllByUser_idAndOrderIdIsNull(
-            user.getId());
+        List<CartItem> cartItems = cartItemRepository.findAllByUser_idAndOrderIdIsNull(user.getId());
         Long restaurantId = menu.getRestaurant().getRestaurantId();
         for (CartItem cartItem : cartItems) {
-            if (cartItem.getMenu().getRestaurant().getRestaurantId() != restaurantId) {
+            if (cartItem.getMenu().getRestaurant().getRestaurantId() != restaurantId){
                 throw new NotMatchRestaurantException();
             }
         }
