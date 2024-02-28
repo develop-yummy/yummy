@@ -1,7 +1,6 @@
 package com.six.yummy.backoffice.service;
 
 import com.six.yummy.backoffice.responsedto.RestaurantSalesResponse;
-import com.six.yummy.backoffice.responsedto.TotalSalesResponse;
 import com.six.yummy.global.exception.ValidateUserException;
 import com.six.yummy.order.entity.Order;
 import com.six.yummy.order.repository.OrderRepository;
@@ -9,14 +8,8 @@ import com.six.yummy.restaurant.entity.Restaurant;
 import com.six.yummy.restaurant.repository.RestaurantRepository;
 import com.six.yummy.user.entity.User;
 import com.six.yummy.user.entity.UserRoleEnum;
-import java.time.DayOfWeek;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.MonthDay;
-import java.time.Year;
-import java.time.YearMonth;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -87,8 +80,8 @@ public class BackOfficeService {
         return priceList;
     }
 
-    private void validateUser(User user){
-        if(user.getRole() != UserRoleEnum.ADMIN){
+    private void validateUser(User user) {
+        if (user.getRole() != UserRoleEnum.ADMIN) {
             throw new ValidateUserException();
         }
     }
