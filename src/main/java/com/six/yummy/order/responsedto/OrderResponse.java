@@ -15,8 +15,8 @@ public class OrderResponse {
     private LocalDateTime orderTime;
     private Long userId;
     private Long restaurantId;
-    private List<CartItemListResponse> cartItems;
     private int totalPrice;
+    private List<CartItemListResponse> cartItems;
 
     public OrderResponse(Order order, User user, Restaurant restaurant,
         List<CartItemListResponse> cartItems) {
