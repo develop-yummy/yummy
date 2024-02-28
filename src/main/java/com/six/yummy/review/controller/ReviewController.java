@@ -27,18 +27,18 @@ public class ReviewController {
         return ResponseEntity.status(201).body(reviewResponse);
     }
 
-    @GetMapping("/restaurant/{restaurantId}/review/date")
+    @GetMapping("/restaurants/{restaurantId}/review/date")
     public ResponseEntity<List<ReviewResponse>> getReviewSortedByDate(@PathVariable Long restaurantId) {
         return ResponseEntity.status(200).body(reviewService.getReviewsByRestaurantId(restaurantId));
 
     }
 
-    @GetMapping("/restaurant/{restaurantId}/review/like")
+    @GetMapping("/restaurants/{restaurantId}/review/like")
     public ResponseEntity<List<ReviewResponse>> getReviewSortedByLike(@PathVariable Long restaurantId) {
         return ResponseEntity.status(200).body(reviewService.getReviewsByLike(restaurantId));
     }
 
-    @DeleteMapping("/restaurant/reviews/delete/{reviewId}")
+    @DeleteMapping("/restaurants/reviews/delete/{reviewId}")
     public ResponseEntity<Void> deleteReview(@PathVariable Long reviewId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         reviewService.deleteReview(reviewId, userDetails.getUser());
         return ResponseEntity.status(200).build();

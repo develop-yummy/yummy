@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/v1/restaurant/reviews")
+@RequestMapping("/v1/restaurants/reviews")
 public class LikeController {
 
     private final LikeService likeService;
