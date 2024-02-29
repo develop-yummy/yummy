@@ -33,25 +33,32 @@ public class UserService {
     public void signup(SignupRequest request) {
         String username = request.getUsername();
         String password = passwordEncoderUtil.passwordEncoder().encode(request.getPassword());
+        String email = request.getEmail();
+        String phoneNumber = request.getPhoneNumber();
+
+        if (userRepository.existByUsername()) throw new ValidateUserException();
+        if (userRepository.existByEmail()) throw new ValidateUserException("이미 존재하는 email입니다.");
+        if (userRepository.existByPhoneNumber()) throw new ValidateUserException("이미 존재하는 전화번호 입니다.");
+
 
         // 회원 중복확인
-        if (userRepository.findByUsername(username).isPresent()) {
-            throw new ValidateUserException();
-        }
+//        if (userRepository.findByUsername(username).isPresent()) {
+//            throw new ValidateUserException();
+//        }
 
-        // email 중복확인
-        String email = request.getEmail();
-        Optional<User> checkEmail = userRepository.findByEmail(email);
-        if (checkEmail.isPresent()) {
-            throw new ValidateUserException("이미 존재하는 email입니다.");
-        }
-
-        // 휴대폰 번호 중복확인
-        String phoneNumber = request.getPhoneNumber();
-        Optional<User> checkPhoneNumber = userRepository.findByPhoneNumber(phoneNumber);
-        if (checkPhoneNumber.isPresent()) {
-            throw new ValidateUserException(("이미 존재하는 전화번호 입니다."));
-        }
+//        // email 중복확인
+//        String email = request.getEmail();
+//        Optional<User> checkEmail = userRepository.findByEmail(email);
+//        if (checkEmail.isPresent()) {
+//            throw new ValidateUserException("이미 존재하는 email입니다.");
+//        }
+//
+//        // 휴대폰 번호 중복확인
+//        String phoneNumber = request.getPhoneNumber();
+//        Optional<User> checkPhoneNumber = userRepository.findByPhoneNumber(phoneNumber);
+//        if (checkPhoneNumber.isPresent()) {
+//            throw new ValidateUserException(("이미 존재하는 전화번호 입니다."));
+//        }
 
         // 사용자 ROLE 확인
         UserRoleEnum role = UserRoleEnum.USER;
