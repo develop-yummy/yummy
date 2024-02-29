@@ -36,9 +36,9 @@ public class UserService {
         String email = request.getEmail();
         String phoneNumber = request.getPhoneNumber();
 
-        if (userRepository.existByUsername()) throw new ValidateUserException();
-        if (userRepository.existByEmail()) throw new ValidateUserException("이미 존재하는 email입니다.");
-        if (userRepository.existByPhoneNumber()) throw new ValidateUserException("이미 존재하는 전화번호 입니다.");
+        if (userRepository.existsByUsername(username)) throw new ValidateUserException();
+        if (userRepository.existsByEmail(email)) throw new ValidateUserException("이미 존재하는 email입니다.");
+        if (userRepository.existsByPhoneNumber(phoneNumber)) throw new ValidateUserException("이미 존재하는 전화번호 입니다.");
 
 
         // 회원 중복확인
