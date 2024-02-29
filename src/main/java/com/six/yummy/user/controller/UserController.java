@@ -1,5 +1,6 @@
 package com.six.yummy.user.controller;
 
+import com.six.yummy.global.exception.ValidateUserException;
 import com.six.yummy.user.entity.UserRoleEnum;
 import com.six.yummy.user.lmpl.UserDetailsImpl;
 import com.six.yummy.user.requestdto.LoginRequest;
@@ -34,8 +35,7 @@ public class UserController {
     public String signup(@Valid @RequestBody SignupRequest requestDto,
         BindingResult bindingResult) {
         List<FieldError> fieldErrors = bindingResult.getFieldErrors();
-        if (!fieldErrors.isEmpty()) {
-            return "회원가입도중 에러가 발생했습니다.";
+        if (!fieldErrors.isEmpty()) { throw  new ValidateUserException();
         }
         userService.signup(requestDto);
         return "회원가입 성공";
